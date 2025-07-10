@@ -100,6 +100,7 @@ USE_TZ = True
 # Static & Media Files
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'LowkeyWall' / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
