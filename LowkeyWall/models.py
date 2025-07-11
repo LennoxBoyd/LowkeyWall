@@ -25,7 +25,6 @@ TOPIC_CHOICES = [
     ('Other', 'Other'),
 ]
 
-feeling = models.CharField(max_length=20, choices=FEELING_CHOICES, blank=False)
 
 FEELING_CHOICES = [
     ('Happy', 'Happy'),
