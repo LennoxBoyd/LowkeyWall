@@ -299,55 +299,34 @@ def contact_page(request):
     return render(request, 'contact.html', {'form': form})
 
 
-def upvote_confession(request, pk):
-    if request.method == 'GET':
-        confession = Confession.objects.filter(pk=pk).first()
-        if not confession:
-            return HttpResponseBadRequest("Confession not found.")
-
-        ip = get_client_ip(request)
-        if ip in confession.upvoted_ips:
-            # Remove upvote
-            confession.upvoted_ips.remove(ip)
-            confession.upvote_count = max(0, confession.upvote_count - 1)
-            status = 'removed'
-        else:
-            # Add upvote
-            confession.upvoted_ips.append(ip)
-            confession.upvote_count += 1
-            status = 'added'
-
-        confession.save()
-        return JsonResponse({'count': confession.upvote_count, 'status': status})
-    return HttpResponseBadRequest("Invalid method.")
-
-def get_client_ip(request):
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
 
 
 @csrf_exempt
 def upvote_confession(request, confession_id):
-    if request.method == "GET":  # Or "POST" if you prefer
-        confession = Confession.objects.get(id=confession_id)
-        session_key = request.session.session_key or request.session.save() or request.session.session_key
+    if request.method == "GET":  # Or POST if you want
+        confession = get_object_or_404(Confession, id=confession_id)
 
-        # Check if upvote already exists
-        upvote, created = Upvote.objects.get_or_create(confession=confession, session_key=session_key)
+        # Ensure session key exists
+        if not request.session.session_key:
+            request.session.create()
+
+        session_key = request.session.session_key
+
+        upvote, created = Upvote.objects.get_or_create(
+            confession=confession,
+            session_key=session_key
+        )
 
         if not created:
-            # If already upvoted, remove the upvote
             upvote.delete()
             count = confession.upvotes.count()
             return JsonResponse({'status': 'removed', 'count': count})
         else:
-            # New upvote
             count = confession.upvotes.count()
             return JsonResponse({'status': 'added', 'count': count})
+
+    return JsonResponse({'error': 'Invalid method'}, status=400)
+
 
 
 def learn_more_ads_view(request):
