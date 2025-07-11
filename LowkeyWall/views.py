@@ -170,12 +170,13 @@ def upvote_confession(request, confession_id):
 
     return JsonResponse({'error': 'Invalid method'}, status=400)
 
-
 def toggle_upvote(request, confession_id):
     confession = get_object_or_404(Confession, id=confession_id)
+
     session_key = request.session.session_key
     if not session_key:
         request.session.create()
+        session_key = request.session.session_key  # ✅ FIXED
 
     upvote, created = Upvote.objects.get_or_create(
         session_key=session_key,
@@ -191,6 +192,7 @@ def toggle_upvote(request, confession_id):
     confession.upvote_count += 1
     confession.save()
     return JsonResponse({'status': 'added', 'count': confession.upvote_count})
+
 
 # ---------------------- M-PESA Payment ----------------------
 
