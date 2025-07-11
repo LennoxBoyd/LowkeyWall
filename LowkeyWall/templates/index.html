@@ -69,16 +69,15 @@
 <main class="container mx-auto px-6 pt-24">
   <div class="max-w-4xl mx-auto mt-12 p-8 card-gradient rounded-lg border border-white/10">
     {% if quote %}
-  <p class="text-2xl font-light italic text-center">
-    "{{ quote.text }}"
-  </p>
-  <p class="text-right mt-4 text-white/60">- {{ quote.author }}</p>
-{% else %}
-  <p class="text-2xl font-light italic text-center">
-    "LowkeyWall — Where secrets live."
-  </p>
-{% endif %}
-
+      <p class="text-2xl font-light italic text-center">
+        "{{ quote.text }}"
+      </p>
+      <p class="text-right mt-4 text-white/60">- {{ quote.author }}</p>
+    {% else %}
+      <p class="text-2xl font-light italic text-center">
+        "LowkeyWall — Where secrets live."
+      </p>
+    {% endif %}
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
@@ -196,49 +195,23 @@ document.addEventListener('DOMContentLoaded', function () {
       updateVisibleCards();
     }
   });
-});
-</script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+  // ✅ Single upvote script
   document.querySelectorAll('.upvote-btn').forEach(btn => {
     btn.addEventListener('click', function (event) {
       event.stopPropagation();
       const confessionId = this.dataset.id;
       const countSpan = this.querySelector('.upvote-count');
 
-      fetch("{% url 'upvote_confession' %}", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "X-CSRFToken": "{{ csrf_token }}"
-        },
-        body: `confession_id=${confessionId}`
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          countSpan.textContent = data.new_count;
-        }
-      });
+      fetch(`/upvote/${confessionId}/`)
+        .then(response => response.json())
+        .then(data => {
+          countSpan.textContent = data.count;
+        });
     });
   });
 });
 </script>
-<script>
-  document.querySelectorAll('.upvote-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const confessionId = btn.dataset.id;
-      fetch(`/upvote/${confessionId}/`)
-        .then(response => response.json())
-        .then(data => {
-          btn.querySelector('.upvote-count').textContent = data.count;
-        });
-    });
-  });
-</script>
 
 </body>
 </html>
-
-
