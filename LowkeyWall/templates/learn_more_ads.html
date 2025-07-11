@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Learn More About Ads - LowkeyWall</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#00B2FF',
+            secondary: '#8B00FF',
+          },
+          borderRadius: {
+            button: '8px',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #000000, #1a1a1a);
+      min-height: 100vh;
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, #00B2FF, #8B00FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .card-gradient {
+      background: linear-gradient(135deg, rgba(0, 178, 255, 0.1), rgba(139, 0, 255, 0.1));
+    }
+  </style>
+</head>
+<body class="text-white px-6 py-12">
+
+  <!-- Header & Back -->
+  <header class="flex justify-between items-center mb-12">
+    <a href="{% url 'mpesa_pay' %}" class="flex items-center gap-2 text-white/70 hover:text-white transition">
+      <i class="ri-arrow-left-line text-xl"></i>
+      <span>Back to Support</span>
+    </a>
+    <h1 class="text-2xl font-bold">LowkeyWall</h1>
+  </header>
+
+  <!-- Learn More Card -->
+  <main class="max-w-4xl mx-auto card-gradient p-8 rounded-2xl border border-white/10 backdrop-blur-md shadow-lg">
+    <h2 class="text-3xl font-bold gradient-text mb-6 text-center">How Ads Support LowkeyWall</h2>
+    <div class="space-y-6 text-white/90 text-sm leading-relaxed">
+      <p>
+        LowkeyWall is committed to staying free, anonymous, and safe for all users. To cover server costs, moderation, and feature improvements, we partner with trusted advertisers.
+      </p>
+      <p>
+        We carefully review all ads to ensure they are respectful and relevant, so they do not interfere with your experience or compromise your privacy.
+      </p>
+      <p>
+        Ads help us fund upgrades, new features, and keep this safe space running for everyone, without forcing donations or paid subscriptions.
+      </p>
+      <h3 class="text-base font-semibold text-white mt-4">Want to Advertise With Us?</h3>
+      <p>
+        We offer opportunities for brands and partners to reach our audience in a meaningful, respectful way. To learn more about sponsored ads or partnerships, please
+        <a href="{% url 'contact' %}" class="underline text-primary">contact us here</a>.
+      </p>
+    </div>
+  </main>
+</body>
+</html>

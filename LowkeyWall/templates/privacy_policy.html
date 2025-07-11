@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy - LowkeyWall</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #000000, #1a1a1a);
+      min-height: 100vh;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #00B2FF, #8B00FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .card-gradient {
+      background: linear-gradient(135deg, rgba(0, 178, 255, 0.1), rgba(139, 0, 255, 0.1));
+    }
+  </style>
+</head>
+<body class="text-white min-h-screen flex items-center justify-center px-6 py-12">
+
+  <!-- Top Left Brand -->
+  <div class="fixed top-6 left-6 z-50 flex items-center space-x-2">
+    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+      <i class="ri-shield-user-line text-white text-xl"></i>
+    </div>
+    <span class="text-2xl font-bold">LowkeyWall</span>
+  </div>
+
+  <!-- Back to Home -->
+  <a href="{% url 'aboutus' %}" class="fixed top-6 right-6 px-4 py-2 flex items-center space-x-2 border border-white/20 rounded-button hover:bg-white/10 transition-all">
+    <i class="ri-arrow-left-line"></i>
+    <span>Back to About</span>
+  </a>
+
+  <!-- Policy Card -->
+  <div class="w-full max-w-4xl card-gradient p-8 rounded-2xl border border-white/10 backdrop-blur-md shadow-lg mt-20">
+    <h1 class="text-3xl font-bold gradient-text mb-6 text-center">Privacy Policy</h1>
+
+    <div class="space-y-6 text-white/90 text-sm leading-relaxed">
+      <p>
+        At LowkeyWall, your privacy is critically important to us. This policy explains what minimal data we collect, how we use it, and how we protect it.
+      </p>
+
+      <h2 class="text-white font-semibold text-base mt-6">1. Information We Collect</h2>
+      <ul class="list-disc list-inside">
+        <li>User-submitted confessions and topics</li>
+        <li>Optional flags to request an AI-generated response</li>
+        <li>Upvote interactions (stored anonymously)</li>
+        <li>Basic non-identifiable analytics (e.g. page views, device type)</li>
+      </ul>
+
+      <h2 class="text-white font-semibold text-base mt-6">2. How We Use Your Information</h2>
+      <p>
+        We use this information to run the platform — publish confessions, show trending topics, allow upvotes, and optionally provide AI-generated replies. We never sell your data or use it for advertising outside LowkeyWall.
+      </p>
+
+      <h2 class="text-white font-semibold text-base mt-6">3. Data Security</h2>
+      <p>
+        We use industry-standard measures to keep the limited data secure. However, please note that no online service can guarantee 100% security.
+      </p>
+
+      <h2 class="text-white font-semibold text-base mt-6">4. Your Rights</h2>
+      <p>
+        Confessions are anonymous by design — we do not collect personal accounts. If you wish to remove content you posted, please contact us with details of the post.
+      </p>
+
+      <h2 class="text-white font-semibold text-base mt-6">5. Changes to This Policy</h2>
+      <p>
+        We may update this policy occasionally. Significant changes will be posted on this page.
+      </p>
+
+      <p class="pt-4 text-white/70 text-sm italic">
+        Questions? Please reach out via our <a href="{% url 'contact' %}" class="underline text-blue-400">Contact Page</a>.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+

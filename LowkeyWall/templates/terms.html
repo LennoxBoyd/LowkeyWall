@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+</html>
+
+
+
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms and Conditions - LowkeyWall</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #000000, #1a1a1a);
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, #00B2FF, #8B00FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .card-gradient {
+      background: linear-gradient(135deg, rgba(0, 178, 255, 0.1), rgba(139, 0, 255, 0.1));
+    }
+  </style>
+</head>
+<body class="text-white bg-gradient-to-br from-black via-[#0a0a0a] to-[#1a1a1a] min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <div class="max-w-4xl mx-auto px-4 pt-10">
+    <div class="flex justify-between items-center mb-6">
+      <a href="{% url 'aboutus' %}" class="text-white text-sm hover:underline flex items-center space-x-2">
+        <i class="ri-arrow-left-line text-lg"></i>
+        <span>Back to About</span>
+      </a>
+      <span class="text-xl font-bold">LowkeyWall</span>
+    </div>
+    <h1 class="text-4xl font-bold mb-4 gradient-text">Terms & Conditions</h1>
+    <p class="text-white/70 text-sm mb-6">
+      By using LowkeyWall, you agree to these terms. Read them carefully before continuing.
+    </p>
+  </div>
+
+  <!-- Terms Content -->
+  <div class="max-w-4xl mx-auto px-4 space-y-8 card-gradient rounded-xl border border-white/10 p-8 shadow-xl backdrop-blur-md">
+
+    <div>
+      <h2 class="text-2xl font-semibold gradient-text mb-2">1. Use of Service</h2>
+      <p class="text-white/80 text-sm">You agree not to post illegal, harmful, or abusive content. All posts must follow community standards.</p>
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-semibold gradient-text mb-2">2. User Responsibilities</h2>
+      <p class="text-white/80 text-sm">All content you post is your responsibility. We do not take responsibility for user-generated content.</p>
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-semibold gradient-text mb-2">3. Privacy</h2>
+      <p class="text-white/80 text-sm">We protect anonymity, but we may take action against abuse. View our <a href="{% url 'privacy_policy' %}" class="underline text-blue-400 hover:text-blue-300">Privacy Policy</a>.</p>
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-semibold gradient-text mb-2">4. Termination</h2>
+      <p class="text-white/80 text-sm">We may ban accounts that violate these terms at our discretion.</p>
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-semibold gradient-text mb-2">5. Changes to Terms</h2>
+      <p class="text-white/80 text-sm">We may update these terms at any time. Your continued use means you accept them.</p>
+    </div>
+
+    <!-- FAQ Section -->
+    <div>
+      <h2 class="text-2xl font-semibold gradient-text mb-4">Frequently Asked Questions</h2>
+
+      <div class="space-y-4 text-sm text-white/80">
+        <div>
+          <strong class="text-white">Q: Can I delete my confession?</strong>
+          <p>A: Yes, if you're logged in and the confession is yours.</p>
+        </div>
+
+        <div>
+          <strong class="text-white">Q: Are my posts really anonymous?</strong>
+          <p>A: Yes — unless you choose to reveal your identity.</p>
+        </div>
+
+        <div>
+          <strong class="text-white">Q: Will my data be sold?</strong>
+          <p>A: No. We respect user privacy. See our Privacy Policy for details.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Accept/Decline -->
+    <div class="mt-10 flex justify-center space-x-4">
+      <form method="get" action="{% url 'index' %}">
+        <button type="submit" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-lg shadow hover:opacity-90 transition">Accept Terms</button>
+      </form>
+      <a href="{% url 'contact' %}" class="bg-gray-800 border border-white/10 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition">Decline</a>
+    </div>
+
+    <p class="text-white/50 text-xs text-center mt-10">Last updated: July 2025</p>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full mt-20 text-sm text-white/50 py-6 border-t border-white/10 text-center">
+    © 2025 LowkeyWall. All rights reserved. | <a href="{% url 'privacy_policy' %}" class="underline">Privacy</a> | <a href="{% url 'guidelines' %}" class="underline">Community Guidelines</a>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post Your Confession - LowkeyWall</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#00B2FF',
+            secondary: '#8B00FF'
+          },
+          borderRadius: {
+            'button': '8px'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #000000, #1a1a1a);
+      min-height: 100vh;
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, #00B2FF, #8B00FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .card-gradient {
+      background: linear-gradient(135deg, rgba(0,178,255,0.1), rgba(139,0,255,0.1));
+    }
+  </style>
+</head>
+<body class="text-white">
+<header class="fixed top-0 left-0 right-0 bg-black/90 backdrop-blur-sm z-50">
+  <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="{% url 'index' %}" class="flex items-center space-x-2 group">
+      <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
+        <i class="ri-arrow-left-s-line text-xl"></i>
+      </div>
+      <span class="text-white/60 group-hover:text-white transition-colors">Back to Wall</span>
+    </a>
+    <div class="flex items-center space-x-2">
+      <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+        <i class="ri-message-3-line text-white text-xl"></i>
+      </div>
+      <span class="text-2xl font-bold">LowkeyWall</span>
+    </div>
+  </nav>
+</header>
+
+<main class="container mx-auto px-6 pt-32 pb-24">
+  <div class="max-w-2xl mx-auto">
+    <p class="text-center text-white/60 italic mb-8">Your identity is never stored. Let it out safely.</p>
+
+    <div class="card-gradient p-8 rounded-lg border border-white/10">
+      <form method="post" class="space-y-8">
+        {% csrf_token %}
+
+        <!-- Topic Dropdown -->
+        <div>
+          <label class="block mb-2 font-medium">Choose Topic</label>
+          {{ form.topic }}
+        </div>
+
+        <!-- Confession Textarea -->
+        <div>
+          <label class="block mb-2 font-medium">Your Confession</label>
+          {{ form.message }}
+        </div>
+       
+
+
+
+        <!-- Feeling Radio Buttons -->
+         <div class="mb-6">
+          <label class="block mb-2 font-medium">How do you feel?</label>
+           {% for radio in form.feeling %}
+           <label class="inline-flex items-center mr-6">
+           {{ radio.tag }}
+           <span class="ml-2">{{ radio.choice_label }}</span>
+           </label>
+           {% endfor %}
+         </div>
+
+
+
+
+
+
+
+        <!-- Anonymous & AI Response Checkboxes -->
+        <div class="flex items-center justify-between">
+          <label class="flex items-center space-x-2 cursor-pointer">
+            {{ form.anonymous }}<span>Stay Anonymous</span>
+          </label>
+          <label class="flex items-center space-x-2 cursor-pointer">
+            {{ form.ai_response_requested }}<span>Request AI Response</span>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full py-4 bg-gradient-to-r from-primary to-secondary rounded-button flex items-center justify-center space-x-2 hover:opacity-90 transition-opacity">
+          <span class="text-lg font-medium">Share Confession</span>
+          <i class="ri-send-plane-line"></i>
+        </button>
+      </form>
+    </div>
+  </div>
+</main>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,157 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Help Center - LowkeyWall</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #000000, #1a1a1a);
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, #00B2FF, #8B00FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .card-gradient {
+      background: linear-gradient(135deg, rgba(0, 178, 255, 0.1), rgba(139, 0, 255, 0.1));
+    }
+  </style>
+</head>
+<body class="text-white bg-gradient-to-br from-black via-[#0a0a0a] to-[#1a1a1a] min-h-screen flex flex-col justify-between">
+
+  <!-- Header -->
+  <div class="max-w-4xl mx-auto px-4 pt-10">
+    <div class="flex justify-between items-center mb-6">
+      <a href="{% url 'contact' %}" class="text-white text-sm hover:underline flex items-center space-x-2">
+        <i class="ri-arrow-left-line text-lg"></i>
+        <span>Back to Contact</span>
+      </a>
+      <span class="text-xl font-bold">LowkeyWall</span>
+    </div>
+    <h1 class="text-4xl font-bold mb-4 gradient-text">Help Center</h1>
+    <p class="text-white/70 text-sm mb-6">
+      Need assistance? Find answers or reach out to us below.
+    </p>
+  </div>
+
+  <!-- Help Content -->
+  <div class="max-w-4xl mx-auto px-4 space-y-8 card-gradient rounded-xl border border-white/10 p-8 shadow-xl backdrop-blur-md">
+
+
+  <div>
+  <h2 class="text-2xl font-semibold gradient-text mb-4">Frequently Asked Questions</h2>
+  <div class="space-y-4 max-w-3xl mx-auto">
+    <!-- FAQ 1 -->
+    <div class="border border-white/10 rounded-lg card-gradient">
+      <button class="faq-button w-full flex justify-between items-center p-4 focus:outline-none" data-target="faq1">
+        <span class="text-left font-medium text-white">How long does it take to get a response?</span>
+        <div class="w-5 h-5 flex items-center justify-center text-white/60 faq-icon">
+          <i class="ri-add-line"></i>
+        </div>
+      </button>
+      <div id="faq1" class="faq-content hidden px-4 pb-4">
+        <p class="text-white/70 text-sm">We typically respond within 24–48 business hours. For urgent matters, please reach us directly.</p>
+      </div>
+    </div>
+
+    <!-- FAQ 2 -->
+    <div class="border border-white/10 rounded-lg card-gradient">
+      <button class="faq-button w-full flex justify-between items-center p-4 focus:outline-none" data-target="faq2">
+        <span class="text-left font-medium text-white">Do you offer support on weekends?</span>
+        <div class="w-5 h-5 flex items-center justify-center text-white/60 faq-icon">
+          <i class="ri-add-line"></i>
+        </div>
+      </button>
+      <div id="faq2" class="faq-content hidden px-4 pb-4">
+        <p class="text-white/70 text-sm">We offer limited support on Saturdays 10 AM – 2 PM. Offices are closed on Sundays & public holidays.</p>
+      </div>
+    </div>
+
+    <!-- FAQ 3 -->
+    <div class="border border-white/10 rounded-lg card-gradient">
+      <button class="faq-button w-full flex justify-between items-center p-4 focus:outline-none" data-target="faq3">
+        <span class="text-left font-medium text-white">Can I schedule a meeting with your team?</span>
+        <div class="w-5 h-5 flex items-center justify-center text-white/60 faq-icon">
+          <i class="ri-add-line"></i>
+        </div>
+      </button>
+      <div id="faq3" class="faq-content hidden px-4 pb-4">
+        <p class="text-white/70 text-sm">Yes! Please send your preferred date and time through our contact form. We’ll confirm by email.</p>
+      </div>
+    </div>
+
+    <!-- FAQ 4 -->
+    <div class="border border-white/10 rounded-lg card-gradient">
+      <button class="faq-button w-full flex justify-between items-center p-4 focus:outline-none" data-target="faq4">
+        <span class="text-left font-medium text-white">Do you provide international shipping?</span>
+        <div class="w-5 h-5 flex items-center justify-center text-white/60 faq-icon">
+          <i class="ri-add-line"></i>
+        </div>
+      </button>
+      <div id="faq4" class="faq-content hidden px-4 pb-4">
+        <p class="text-white/70 text-sm">Yes, we ship worldwide. Rates & delivery times vary by region. Please contact us for details.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Accordion Script -->
+<script>
+  const buttons = document.querySelectorAll('.faq-button');
+
+  buttons.forEach(button => {
+    button.addEventListener('click', () => {
+      const target = button.getAttribute('data-target');
+      const content = document.getElementById(target);
+      const icon = button.querySelector('.faq-icon i');
+
+      if (content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.classList.remove('ri-add-line');
+        icon.classList.add('ri-subtract-line');
+      } else {
+        content.classList.add('hidden');
+        icon.classList.remove('ri-subtract-line');
+        icon.classList.add('ri-add-line');
+      }
+    });
+  });
+</script>
+
+    <div>
+      <h2 class="text-2xl font-semibold gradient-text mb-2">Contact Support</h2>
+      <p class="text-white/80 mb-4 text-sm">
+        Didn’t find what you’re looking for? We’re here to help!
+      </p>
+      <a href="{% url 'contact' %}" class="inline-block bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-2 rounded-lg shadow hover:opacity-90 transition">
+        Contact Us
+      </a>
+    </div>
+
+    <div>
+      <h2 class="text-2xl font-semibold gradient-text mb-2">More Resources</h2>
+      <ul class="space-y-2 text-white/80 text-sm">
+        <li><a href="{% url 'privacy_policy' %}" class="text-gray-400 hover:text-white">Privacy Policy</a></li>
+        <li><a href="{% url 'terms' %}" class="text-gray-400 hover:text-white">Terms & Conditions</a></li>
+        <li><a href="{% url 'guidelines' %}" class="text-gray-400 hover:text-white">Community Guidelines</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full mt-20 text-sm text-white/50 py-6 border-t border-white/10 text-center">
+    © 2025 LowkeyWall. All rights reserved. | 
+    <a href="{% url 'privacy_policy' %}" class="underline">Privacy</a> | 
+    <a href="{% url 'guidelines' %}" class="underline">Community Guidelines</a>
+  </footer>
+
+</body>
+</html>

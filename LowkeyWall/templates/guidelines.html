@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Guidelines - LowkeyWall</title>
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #000000, #1a1a1a);
+      min-height: 100vh;
+    }
+
+    .gradient-text {
+      background: linear-gradient(90deg, #00B2FF, #8B00FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .card-gradient {
+      background: linear-gradient(135deg, rgba(0, 178, 255, 0.1), rgba(139, 0, 255, 0.1));
+    }
+  </style>
+</head>
+<body class="text-white min-h-screen flex items-center justify-center px-6 py-12">
+
+  <!-- Top Left Brand -->
+  <div class="fixed top-6 left-6 z-50 flex items-center space-x-2">
+    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+      <i class="ri-shield-check-line text-white text-xl"></i>
+    </div>
+    <span class="text-2xl font-bold">LowkeyWall</span>
+  </div>
+
+  <!-- Back to Home -->
+  <a href="{% url 'aboutus' %}" class="fixed top-6 right-6 px-4 py-2 flex items-center space-x-2 border border-white/20 rounded-button hover:bg-white/10 transition-all">
+    <i class="ri-arrow-left-line"></i>
+    <span>Back to About</span>
+  </a>
+
+  <!-- Guidelines Card -->
+  <div class="w-full max-w-4xl card-gradient p-8 rounded-2xl border border-white/10 backdrop-blur-md shadow-lg mt-20">
+    <h1 class="text-3xl font-bold gradient-text mb-6 text-center">Community Guidelines</h1>
+
+    <div class="space-y-6 text-white/90 text-sm leading-relaxed">
+      <p>LowkeyWall is a safe, respectful, and anonymous space. Please read and follow our community rules to keep it that way.</p>
+
+      <h2 class="text-white font-semibold text-base mt-6">✅ Allowed on LowkeyWall</h2>
+      <ul class="list-disc list-inside">
+        <li>Sharing anonymous confessions, thoughts, and stories</li>
+        <li>Expressing mental health struggles or emotional states</li>
+        <li>Requesting AI-generated responses for insight or fun</li>
+        <li>Interacting respectfully with others' posts</li>
+      </ul>
+
+      <h2 class="text-white font-semibold text-base mt-6">🚫 Not Allowed</h2>
+      <ul class="list-disc list-inside text-red-400">
+        <li>Hate speech, racism, homophobia, or threats</li>
+        <li>Revealing personal information (yours or others)</li>
+        <li>Bullying, harassment, or targeted attacks</li>
+        <li>Sexually explicit content or illegal activities</li>
+        <li>Spam or promotional content</li>
+      </ul>
+
+      <h2 class="text-white font-semibold text-base mt-6">🛠️ Moderation & Enforcement</h2>
+      <p>
+        Violations of these rules may result in content removal or bans. Our team monitors content to maintain a safe environment. Users can also report posts they find harmful.
+      </p>
+
+      <h2 class="text-white font-semibold text-base mt-6">🤝 Respect Anonymity</h2>
+      <p>
+        Remember that everyone here is anonymous. Assume good intent, be kind, and keep it lowkey.
+      </p>
+
+      <p class="pt-4 text-white/70 text-sm italic">
+        Questions or feedback? Reach out via our <a href="{% url 'contact' %}" class="underline text-blue-400">Contact Page</a>.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
