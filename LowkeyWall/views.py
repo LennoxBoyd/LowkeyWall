@@ -45,15 +45,20 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 def index(request):
+    confessions = Confession.objects.order_by('-created_at')[:6]
     total_confessions = Confession.objects.count()
     total_upvotes = Upvote.objects.count()
     active_users = User.objects.count()
+    quote = Quote.objects.order_by('?').first()
 
     return render(request, 'index.html', {
+        'confessions': confessions,
         'total_confessions': total_confessions,
         'total_upvotes': total_upvotes,
         'active_users': active_users,
+        'quote': quote,
     })
+
 
     # ✅ Get a random quote BEFORE returning
     quote = Quote.objects.order_by('?').first()
