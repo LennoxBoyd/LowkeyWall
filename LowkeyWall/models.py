@@ -31,9 +31,6 @@ class Confession(models.Model):
         ('bad', 'Bad'),
         ('prefer_not', 'Prefer not to say'),
     ]
-    feeling = models.CharField(max_length=20, choices=FEELING_CHOICES, default='prefer_not')
-    # ... other fields ...
-
 
 
 PLAN_CHOICES = [
