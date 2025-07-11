@@ -25,12 +25,17 @@ TOPIC_CHOICES = [
     ('Other', 'Other'),
 ]
 
-class Confession(models.Model):
-    FEELING_CHOICES = [
-        ('good', 'Good'),
-        ('bad', 'Bad'),
-        ('prefer_not', 'Prefer not to say'),
-    ]
+feeling = models.CharField(max_length=20, choices=FEELING_CHOICES, blank=False)
+
+FEELING_CHOICES = [
+    ('Happy', 'Happy'),
+    ('Sad', 'Sad'),
+    ('Angry', 'Angry'),
+    ('Confused', 'Confused'),
+    ('Anxious', 'Anxious'),
+    # Add as many as you want
+]
+
 
 
 PLAN_CHOICES = [
