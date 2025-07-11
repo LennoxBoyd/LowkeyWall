@@ -41,14 +41,19 @@ from django.db.models import Count
 from django.shortcuts import render
 from .models import Confession, Upvote, Quote
 
-def index(request):
-    confessions = Confession.objects.annotate(
-        upvote_total=Count('upvotes')
-    ).order_by('-created_at')[:15]
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
+def index(request):
     total_confessions = Confession.objects.count()
     total_upvotes = Upvote.objects.count()
-    active_users = Upvote.objects.values('session_key').distinct().count()
+    active_users = User.objects.count()
+
+    return render(request, 'index.html', {
+        'total_confessions': total_confessions,
+        'total_upvotes': total_upvotes,
+        'active_users': active_users,
+    })
 
     # ✅ Get a random quote BEFORE returning
     quote = Quote.objects.order_by('?').first()
