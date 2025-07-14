@@ -22,8 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&5xgs5)8z&p5g783#pj_2%fl6d+e9@1-00dzes__27laa2mb1='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS = ['lowkeywall.pythonanywhere.com','www.lowkeywall.pythonanywhere.com']
+DEBUG = True
+ALLOWED_HOSTS = []
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -34,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'LowkeyWall',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
