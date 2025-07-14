@@ -43,10 +43,7 @@ def index(request):
     confessions = Confession.objects.order_by('-created_at')[:6]
     total_confessions = Confession.objects.count()
     total_upvotes = Upvote.objects.count()
-<<<<<<< HEAD
     active_users = Upvote.objects.values('session_key').distinct().count()
-=======
-    active_users = User.objects.count()
     quote = Quote.objects.order_by('?').first()
 
     return render(request, 'index.html', {
@@ -57,18 +54,6 @@ def index(request):
         'quote': quote,
     })
 
-
-    # ✅ Get a random quote BEFORE returning
->>>>>>> 7584a8d5f1e0269376464270f8f68cdecc190cae
-    quote = Quote.objects.order_by('?').first()
-
-    return render(request, 'index.html', {
-        'confessions': confessions,
-        'total_confessions': total_confessions,
-        'total_upvotes': total_upvotes,
-        'active_users': active_users,
-        'quote': quote,
-    })
 
 
 def post_confession(request):
