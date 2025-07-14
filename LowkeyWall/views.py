@@ -147,6 +147,9 @@ def upvote_confession(request, confession_id):
     return HttpResponseBadRequest("Invalid request method.")
 
 
+  
+
+
 
 # -------------------- M-PESA Payment --------------------
 
