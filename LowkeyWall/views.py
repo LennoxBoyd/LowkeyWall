@@ -146,10 +146,10 @@ def upvote_confession(request, confession_id):
 
     return HttpResponseBadRequest("Invalid request method.")
 
-<<<<<<< HEAD
+
 
 # -------------------- M-PESA Payment --------------------
-=======
+
 def toggle_upvote(request, confession_id):
     confession = get_object_or_404(Confession, id=confession_id)
 
@@ -176,7 +176,7 @@ def toggle_upvote(request, confession_id):
 
 # ---------------------- M-PESA Payment ----------------------
 
->>>>>>> 7584a8d5f1e0269376464270f8f68cdecc190cae
+
 
 def get_access_token():
     consumer_key = settings.MPESA_CONSUMER_KEY
@@ -278,8 +278,7 @@ def contact_page(request):
     return render(request, 'contact.html', {'form': form})
 
 
-<<<<<<< HEAD
-=======
+
 
 
 @csrf_exempt
@@ -310,7 +309,7 @@ def upvote_confession(request, confession_id):
 
 
 
->>>>>>> 7584a8d5f1e0269376464270f8f68cdecc190cae
+
 def learn_more_ads_view(request):
     return render(request, 'learn_more_ads.html')
 
