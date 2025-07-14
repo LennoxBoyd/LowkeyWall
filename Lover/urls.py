@@ -25,5 +25,5 @@ urlpatterns = [
     path('', include('LowkeyWall.urls')),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='register/login.html'), name='login'),
 ]
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
