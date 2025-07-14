@@ -22,7 +22,7 @@ TOPIC_CHOICES = [
     ('Success', 'Success'),
     ('Failure', 'Failure'),
     ('Secrets', 'Secrets'),
-    ('Other', 'Other'),
+    
 ]
 
 
