@@ -164,83 +164,8 @@
 </a>
 
 <script>
-<<<<<<< HEAD
-  document.addEventListener('DOMContentLoaded', function () {
-    // Animate counters
-    const counters = document.querySelectorAll('.counter-animate');
-    counters.forEach(counter => {
-      const target = parseInt(counter.textContent.replace(/,/g, ''));
-      let current = 0;
-      const increment = target / 50;
-      const updateCounter = () => {
-        if (current < target) {
-          current += increment;
-          counter.textContent = Math.ceil(current).toLocaleString();
-          requestAnimationFrame(updateCounter);
-        } else {
-          counter.textContent = target.toLocaleString();
-        }
-      };
-      updateCounter();
-    });
-
-    // Carousel for recent cards
-    const cards = Array.from(document.querySelectorAll('.confession-card'));
-    const cardsPerPage = 3;
-    let currentPage = 0;
-
-    function updateVisibleCards() {
-      cards.forEach((card, index) => {
-        card.style.display = (index >= currentPage * cardsPerPage && index < (currentPage + 1) * cardsPerPage) ? 'block' : 'none';
-      });
-    }
-
-    updateVisibleCards();
-
-    document.getElementById('prev-btn')?.addEventListener('click', () => {
-      if (currentPage > 0) {
-        currentPage--;
-        updateVisibleCards();
-      }
-    });
-
-    document.getElementById('next-btn')?.addEventListener('click', () => {
-      if ((currentPage + 1) * cardsPerPage < cards.length) {
-        currentPage++;
-        updateVisibleCards();
-      }
-    });
-
-    // ✅ Clean upvote logic (CSRF safe POST!)
-    document.querySelectorAll('.upvote-btn').forEach(button => {
-      button.addEventListener('click', function (event) {
-        event.stopPropagation();
-        const confessionId = this.dataset.id;
-        const countSpan = this.querySelector('.upvote-count');
-
-        fetch(`/upvote/${confessionId}/`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "X-CSRFToken": "{{ csrf_token }}"
-          },
-          body: ""
-        })
-        .then(res => res.json())
-        .then(data => {
-          countSpan.textContent = data.new_count;
-          if (data.status === 'added') {
-            this.classList.add('text-primary');
-          } else {
-            this.classList.remove('text-primary');
-          }
-        })
-        .catch(err => console.error('Upvote error:', err));
-      });
-    });
-  });
-=======
 document.addEventListener('DOMContentLoaded', function () {
+  // Animate counters
   const counters = document.querySelectorAll('.counter-animate');
   counters.forEach(counter => {
     const target = parseInt(counter.textContent.replace(/,/g, ''));
@@ -258,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
     updateCounter();
   });
 
+  // Carousel for recent cards
   const cards = Array.from(document.querySelectorAll('.confession-card'));
   const cardsPerPage = 3;
   let currentPage = 0;
@@ -284,38 +210,43 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
-  // ✅ Single upvote script
-  document.querySelectorAll('.upvote-btn').forEach(btn => {
-    btn.addEventListener('click', function (event) {
+  // ✅ Upvote logic with CSRF POST
+  document.querySelectorAll('.upvote-btn').forEach(button => {
+    button.addEventListener('click', function (event) {
       event.stopPropagation();
       const confessionId = this.dataset.id;
       const countSpan = this.querySelector('.upvote-count');
 
-      fetch(`/upvote/${confessionId}/`)
-        .then(response => response.json())
-        .then(data => {
-          countSpan.textContent = data.count;
-        });
+      fetch(`/upvote/${confessionId}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: ""
+      })
+      .then(res => res.json())
+      .then(data => {
+        countSpan.textContent = data.new_count;
+        if (data.status === 'added') {
+          this.classList.add('text-primary');
+        } else {
+          this.classList.remove('text-primary');
+        }
+      })
+      .catch(err => console.error('Upvote error:', err));
     });
   });
-});
-  document.addEventListener('DOMContentLoaded', function () {
-  // Existing counters + upvote logic stay as is!
 
-  // ✅ Add toggle for mobile menu:
+  // ✅ Mobile menu toggle
   const menuBtn = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
 
   menuBtn.addEventListener('click', () => {
     mobileMenu.classList.toggle('hidden');
   });
-
-  // Rest of your JS...
 });
-
->>>>>>> 7584a8d5f1e0269376464270f8f68cdecc190cae
 </script>
-
 
 
 </body>
