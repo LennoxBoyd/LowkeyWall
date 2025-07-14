@@ -10,10 +10,6 @@ from .views import (
     terms_view,
     guidelines_view,
 )
-<<<<<<< HEAD
-=======
-from django.contrib import admin
->>>>>>> 7584a8d5f1e0269376464270f8f68cdecc190cae
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -25,12 +21,13 @@ urlpatterns = [
     path('contact/', contact_page, name='contact'),
     path('privacy_policy/', privacy_policy_view, name='privacy_policy'),
     path('guidelines/', guidelines_view, name='guidelines'),
-<<<<<<< HEAD
     path('terms/', terms_view, name='terms'),
 
     # MPESA
     path('mpesa/pay/', views.mpesa_pay, name='mpesa_pay'),
     path('mpesa/callback/', views.mpesa_callback, name='mpesa_callback'),
+
+    # Help Center
     path('help/', views.help_center, name='help_center'),
 
     # Ads info page
@@ -38,11 +35,4 @@ urlpatterns = [
 
     # API endpoint
     path('api/confessions/', views.get_confessions, name='api_confessions'),
-=======
-    path('terms/', views.terms_view, name='terms'),
-    path('mpesa/pay/', views.mpesa_pay, name='mpesa_pay'),
-    path('mpesa/callback/', views.mpesa_callback, name='mpesa_callback'),
-    path('help/', views.help_center, name='help_center'),
-    path('learn-more-ads/', views.learn_more_ads_view, name='learn_more_ads'),
->>>>>>> 7584a8d5f1e0269376464270f8f68cdecc190cae
 ]
