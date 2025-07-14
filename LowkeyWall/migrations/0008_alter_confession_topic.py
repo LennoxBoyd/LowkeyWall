@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                     ("Success", "Success"),
                     ("Failure", "Failure"),
                     ("Secrets", "Secrets"),
-                    ("Other", "Other"),
+                    
                 ],
                 max_length=100,
             ),
