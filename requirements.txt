@@ -1,0 +1,5 @@
+Django==5.2.3
+dj-database-url
+gunicorn
+whitenoise
+djangorestframework

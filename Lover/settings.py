@@ -11,22 +11,19 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 
-
-from pathlib import Path
 import os
+from pathlib import Path
+import dj_database_url
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&5xgs5)8z&p5g783#pj_2%fl6d+e9@1-00dzes__27laa2mb1='
+# Secret key & debug from environment variables
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'unsafe-default-for-dev-only')
+DEBUG = os.getenv('DJANGO_DEBUG', 'False') == 'True'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = [ 'lowkeywall.pythonanywhere.com',
-    'www.lowkeywall.pythonanywhere.com',
-    '127.0.0.1',
-    'localhost']
+# Allowed hosts
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '*').split(',')
 
 # Application definition
 INSTALLED_APPS = [
@@ -43,6 +40,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # WhiteNoise for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -71,28 +69,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'Lover.wsgi.application'
 
-# Database
+# Database setup using dj_database_url
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+    )
 }
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
 ]
 
 # Internationalization
@@ -101,29 +91,28 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static & Media Files
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [BASE_DIR / 'LowkeyWall' / 'static']
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_DIRS = [BASE_DIR / 'LowkeyWall' / 'static']
+
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
-
-# Custom User Model
 
 # Authentication redirects
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'profile'
 LOGOUT_REDIRECT_URL = 'login'
 
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ========================
-# ✅ M-PESA Sandbox Config
+# M-PESA Sandbox Config from environment variables
 # ========================
-MPESA_SHORTCODE = '174379'  # Daraja test shortcode
-MPESA_PASSKEY = 'bfb279f9aa9bdbcf113b1aa8a39d3852e1e5b54fc5a17a2b8d6f6c5d77a3d72d'
-MPESA_CONSUMER_KEY = 'T84PgdnCLJahOTFwx8B9CYrJDPIrLHUxqrlkP3UTiGEYGjAV'
-MPESA_CONSUMER_SECRET = 'K2HyjKUeZFFUCa6K9qvu17IJGEGsLUY6LuhEKwZEtiCiAJRXTqBF9ix95BcQgwkp'
-# settings.py
-MPESA_CALLBACK_URL = "https://toolkit-alarm-artificial-headphones.trycloudflare.com/mpesa/callback/"
+MPESA_SHORTCODE = os.getenv('MPESA_SHORTCODE')
+MPESA_PASSKEY = os.getenv('MPESA_PASSKEY')
+MPESA_CONSUMER_KEY = os.getenv('MPESA_CONSUMER_KEY')
+MPESA_CONSUMER_SECRET = os.getenv('MPESA_CONSUMER_SECRET')
+MPESA_CALLBACK_URL = os.getenv('MPESA_CALLBACK_URL')

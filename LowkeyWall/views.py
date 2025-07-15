@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.utils import timezone
 from django.conf import settings
 
+
 import json
 import requests
 import base64
@@ -53,16 +54,29 @@ def index(request):
         'active_users': active_users,
         'quote': quote,
     })
+from django.shortcuts import render, redirect
+from .forms import ConfessionForm
+
 def post_confession(request):
     if request.method == 'POST':
         form = ConfessionForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('index')
+            confession = form.save(commit=False)  # don’t save yet
+
+            # ✅ Ensure the session exists
+            if not request.session.session_key:
+                request.session.create()
+
+            # ✅ Save session_owner
+            confession.session_owner = request.session.session_key
+
+            confession.save()
+
+            return redirect('index')  # or wherever you want to go
     else:
         form = ConfessionForm()
-    return render(request, 'post_confession.html', {'form': form})
 
+    return render(request, 'post_confession.html', {'form': form})
 
 
 
@@ -295,3 +309,17 @@ def learn_more_ads_view(request):
 
 def help_center(request):
     return render(request, 'help_center.html')   
+
+
+
+def my_confessions(request):
+    # Make sure the user has a session key
+    if not request.session.session_key:
+        request.session.create()
+
+    session_key = request.session.session_key
+
+    # ✅ Filter confessions where session_owner matches this session
+    confessions = Confession.objects.filter(session_owner=session_key).order_by('-created_at')
+
+    return render(request, 'my_confessions.html', {'confessions': confessions})

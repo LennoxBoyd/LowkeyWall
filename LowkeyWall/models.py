@@ -1,7 +1,5 @@
 from django.db import models
 import random
-from django.db import models
-
 
 # --- Choice Definitions ---
 
@@ -22,9 +20,7 @@ TOPIC_CHOICES = [
     ('Success', 'Success'),
     ('Failure', 'Failure'),
     ('Secrets', 'Secrets'),
-    
 ]
-
 
 FEELING_CHOICES = [
     ('Happy', 'Happy'),
@@ -32,10 +28,8 @@ FEELING_CHOICES = [
     ('Angry', 'Angry'),
     ('Confused', 'Confused'),
     ('Anxious', 'Anxious'),
-    # Add as many as you want
+    # Add more if you want
 ]
-
-
 
 PLAN_CHOICES = [
     ('basic', 'Supporter'),
@@ -54,13 +48,14 @@ class Quote(models.Model):
 
 class Confession(models.Model):
     topic = models.CharField(max_length=100, choices=TOPIC_CHOICES)
-    message = models.TextField(max_length=1000)
-    feeling = models.CharField(max_length=20, choices=FEELING_CHOICES, blank=False)
+    message = models.TextField(max_length=2000)  # ✅ Increased limit
+    feeling = models.CharField(max_length=20, choices=FEELING_CHOICES)
     anonymous = models.BooleanField(default=True)
     ai_response_requested = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     display_name = models.CharField(max_length=50, blank=True)
     upvoted_ips = models.JSONField(default=list, blank=True)
+    session_owner = models.CharField(max_length=40, blank=True, null=True)  # ✅ NEW FIELD
 
     def save(self, *args, **kwargs):
         if not self.display_name:
@@ -74,8 +69,6 @@ class Confession(models.Model):
     def upvote_count(self):
         return self.upvotes.count()
 
-
-
 class Comment(models.Model):
     confession = models.ForeignKey(Confession, on_delete=models.CASCADE)
     text = models.TextField()
@@ -84,7 +77,6 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comment on {self.confession.id} at {self.created_at.strftime('%Y-%m-%d %H:%M')}"
 
-
 class Reply(models.Model):
     confession = models.ForeignKey(Confession, on_delete=models.CASCADE, related_name='replies')
     message = models.TextField()
@@ -92,7 +84,6 @@ class Reply(models.Model):
 
     def __str__(self):
         return f"Reply to Confession {self.confession.id}"
-
 
 class Upvote(models.Model):
     confession = models.ForeignKey(Confession, on_delete=models.CASCADE, related_name='upvotes')
@@ -105,7 +96,6 @@ class Upvote(models.Model):
     def __str__(self):
         return f"Upvote for Confession {self.confession.id} by Session {self.session_key}"
 
-
 class SupportPlan(models.Model):
     name = models.CharField(max_length=50, choices=PLAN_CHOICES, unique=True)
     price_usd = models.DecimalField(max_digits=6, decimal_places=2)
@@ -117,7 +107,6 @@ class SupportPlan(models.Model):
     def __str__(self):
         return self.get_name_display()
 
-
 class ContactMessage(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
@@ -126,6 +115,7 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.email}"
+
     
 
 
