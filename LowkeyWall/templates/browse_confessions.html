@@ -110,26 +110,35 @@
     {% endif %}
   </main>
 
-  <!-- Upvote Script -->
-  <script>
-    document.querySelectorAll('.upvote-btn').forEach(button => {
-      button.addEventListener('click', (event) => {
-        event.stopPropagation();
-        const confessionId = button.dataset.id;
-        fetch(`/upvote/${confessionId}/`)
-        .then(res => res.json())
-        .then(data => {
-          button.querySelector('.upvote-count').textContent = data.count;
-          if (data.status === 'added') {
-            button.classList.add('text-primary');
-          } else {
-            button.classList.remove('text-primary');
-          }
-        })
-        .catch(err => console.error('Upvote error:', err));
-      });
+<!-- ✅ Upvote Script -->
+<script>
+  document.querySelectorAll('.upvote-btn').forEach(button => {
+    button.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const confessionId = button.dataset.id;
+
+      fetch(`/upvote/${confessionId}/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": "{{ csrf_token }}"
+        },
+        body: ""
+      })
+      .then(res => res.json())
+      .then(data => {
+        button.querySelector('.upvote-count').textContent = data.new_count;
+        if (data.status === 'added') {
+          button.classList.add('text-primary');
+        } else {
+          button.classList.remove('text-primary');
+        }
+      })
+      .catch(err => console.error('Upvote error:', err));
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>
 
