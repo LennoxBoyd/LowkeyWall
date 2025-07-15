@@ -22,8 +22,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&5xgs5)8z&p5g783#pj_2%fl6d+e9@1-00dzes__27laa2mb1='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+DEBUG = True
+ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
@@ -101,6 +101,7 @@ USE_TZ = True
 # Static & Media Files
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'LowkeyWall' / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 

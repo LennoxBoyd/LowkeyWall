@@ -36,14 +36,30 @@ def get_confessions(request):
 
 # -------------------- Pages --------------------
 
-def index(request):
-    confessions = Confession.objects.annotate(
-        upvote_total=Count('upvotes')
-    ).order_by('-created_at')[:15]
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
+def index(request):
+    confessions = Confession.objects.order_by('-created_at')[:6]
     total_confessions = Confession.objects.count()
     total_upvotes = Upvote.objects.count()
+<<<<<<< HEAD
     active_users = Upvote.objects.values('session_key').distinct().count()
+=======
+    active_users = User.objects.count()
+    quote = Quote.objects.order_by('?').first()
+
+    return render(request, 'index.html', {
+        'confessions': confessions,
+        'total_confessions': total_confessions,
+        'total_upvotes': total_upvotes,
+        'active_users': active_users,
+        'quote': quote,
+    })
+
+
+    # ✅ Get a random quote BEFORE returning
+>>>>>>> 7584a8d5f1e0269376464270f8f68cdecc190cae
     quote = Quote.objects.order_by('?').first()
 
     return render(request, 'index.html', {
@@ -145,8 +161,37 @@ def upvote_confession(request, confession_id):
 
     return HttpResponseBadRequest("Invalid request method.")
 
+<<<<<<< HEAD
 
 # -------------------- M-PESA Payment --------------------
+=======
+def toggle_upvote(request, confession_id):
+    confession = get_object_or_404(Confession, id=confession_id)
+
+    session_key = request.session.session_key
+    if not session_key:
+        request.session.create()
+        session_key = request.session.session_key  # ✅ FIXED
+
+    upvote, created = Upvote.objects.get_or_create(
+        session_key=session_key,
+        confession=confession
+    )
+
+    if not created:
+        upvote.delete()
+        confession.upvote_count = max(0, confession.upvote_count - 1)
+        confession.save()
+        return JsonResponse({'status': 'removed', 'count': confession.upvote_count})
+
+    confession.upvote_count += 1
+    confession.save()
+    return JsonResponse({'status': 'added', 'count': confession.upvote_count})
+
+
+# ---------------------- M-PESA Payment ----------------------
+
+>>>>>>> 7584a8d5f1e0269376464270f8f68cdecc190cae
 
 def get_access_token():
     consumer_key = settings.MPESA_CONSUMER_KEY
@@ -248,6 +293,39 @@ def contact_page(request):
     return render(request, 'contact.html', {'form': form})
 
 
+<<<<<<< HEAD
+=======
+
+
+@csrf_exempt
+def upvote_confession(request, confession_id):
+    if request.method == "GET":  # Or POST if you want
+        confession = get_object_or_404(Confession, id=confession_id)
+
+        # Ensure session key exists
+        if not request.session.session_key:
+            request.session.create()
+
+        session_key = request.session.session_key
+
+        upvote, created = Upvote.objects.get_or_create(
+            confession=confession,
+            session_key=session_key
+        )
+
+        if not created:
+            upvote.delete()
+            count = confession.upvotes.count()
+            return JsonResponse({'status': 'removed', 'count': count})
+        else:
+            count = confession.upvotes.count()
+            return JsonResponse({'status': 'added', 'count': count})
+
+    return JsonResponse({'error': 'Invalid method'}, status=400)
+
+
+
+>>>>>>> 7584a8d5f1e0269376464270f8f68cdecc190cae
 def learn_more_ads_view(request):
     return render(request, 'learn_more_ads.html')
 

@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LowkeyWall - Share Your Secrets Anonymously</title>
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png" />
+  <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
   <script>
     tailwind.config = {
@@ -49,36 +49,48 @@
 <body class="text-white">
 <header class="fixed top-0 left-0 right-0 bg-black/90 backdrop-blur-sm z-50">
   <nav class="container mx-auto px-6 py-4 flex items-center justify-between">
+    <!-- Logo -->
     <div class="flex items-center space-x-2">
       <div class="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
         <i class="ri-message-3-line text-white text-xl"></i>
       </div>
       <span class="text-2xl font-bold">LowkeyWall</span>
     </div>
+
+    <!-- Desktop nav links -->
     <div class="hidden md:flex items-center space-x-8">
       <a href="{% url 'browse_confessions' %}" class="hover:text-primary transition-colors">Browse</a>
       <a href="{% url 'aboutus' %}" class="hover:text-primary transition-colors">About</a>
       <a href="{% url 'mpesa_pay' %}" class="hover:text-primary transition-colors">Ads & Donations</a>
     </div>
-    <button class="md:hidden w-10 h-10 flex items-center justify-center">
+
+    <!-- Mobile menu button -->
+    <button id="mobile-menu-btn" class="md:hidden w-10 h-10 flex items-center justify-center">
       <i class="ri-menu-line text-2xl"></i>
     </button>
   </nav>
+
+  <!-- Mobile menu links -->
+  <div id="mobile-menu" class="hidden flex flex-col items-start px-6 pb-4 space-y-4 md:hidden">
+    <a href="{% url 'browse_confessions' %}" class="hover:text-primary transition-colors">Browse</a>
+    <a href="{% url 'aboutus' %}" class="hover:text-primary transition-colors">About</a>
+    <a href="{% url 'mpesa_pay' %}" class="hover:text-primary transition-colors">Ads & Donations</a>
+  </div>
 </header>
+
 
 <main class="container mx-auto px-6 pt-24">
   <div class="max-w-4xl mx-auto mt-12 p-8 card-gradient rounded-lg border border-white/10">
     {% if quote %}
-  <p class="text-2xl font-light italic text-center">
-    "{{ quote.text }}"
-  </p>
-  <p class="text-right mt-4 text-white/60">- {{ quote.author }}</p>
-{% else %}
-  <p class="text-2xl font-light italic text-center">
-    "LowkeyWall — Where secrets live."
-  </p>
-{% endif %}
-
+      <p class="text-2xl font-light italic text-center">
+        "{{ quote.text }}"
+      </p>
+      <p class="text-right mt-4 text-white/60">- {{ quote.author }}</p>
+    {% else %}
+      <p class="text-2xl font-light italic text-center">
+        "LowkeyWall — Where secrets live."
+      </p>
+    {% endif %}
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
@@ -152,6 +164,7 @@
 </a>
 
 <script>
+<<<<<<< HEAD
   document.addEventListener('DOMContentLoaded', function () {
     // Animate counters
     const counters = document.querySelectorAll('.counter-animate');
@@ -226,11 +239,84 @@
       });
     });
   });
+=======
+document.addEventListener('DOMContentLoaded', function () {
+  const counters = document.querySelectorAll('.counter-animate');
+  counters.forEach(counter => {
+    const target = parseInt(counter.textContent.replace(/,/g, ''));
+    let current = 0;
+    const increment = target / 50;
+    const updateCounter = () => {
+      if (current < target) {
+        current += increment;
+        counter.textContent = Math.ceil(current).toLocaleString();
+        requestAnimationFrame(updateCounter);
+      } else {
+        counter.textContent = target.toLocaleString();
+      }
+    };
+    updateCounter();
+  });
+
+  const cards = Array.from(document.querySelectorAll('.confession-card'));
+  const cardsPerPage = 3;
+  let currentPage = 0;
+
+  function updateVisibleCards() {
+    cards.forEach((card, index) => {
+      card.style.display = (index >= currentPage * cardsPerPage && index < (currentPage + 1) * cardsPerPage) ? 'block' : 'none';
+    });
+  }
+
+  updateVisibleCards();
+
+  document.getElementById('prev-btn')?.addEventListener('click', () => {
+    if (currentPage > 0) {
+      currentPage--;
+      updateVisibleCards();
+    }
+  });
+
+  document.getElementById('next-btn')?.addEventListener('click', () => {
+    if ((currentPage + 1) * cardsPerPage < cards.length) {
+      currentPage++;
+      updateVisibleCards();
+    }
+  });
+
+  // ✅ Single upvote script
+  document.querySelectorAll('.upvote-btn').forEach(btn => {
+    btn.addEventListener('click', function (event) {
+      event.stopPropagation();
+      const confessionId = this.dataset.id;
+      const countSpan = this.querySelector('.upvote-count');
+
+      fetch(`/upvote/${confessionId}/`)
+        .then(response => response.json())
+        .then(data => {
+          countSpan.textContent = data.count;
+        });
+    });
+  });
+});
+  document.addEventListener('DOMContentLoaded', function () {
+  // Existing counters + upvote logic stay as is!
+
+  // ✅ Add toggle for mobile menu:
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+
+  // Rest of your JS...
+});
+
+>>>>>>> 7584a8d5f1e0269376464270f8f68cdecc190cae
 </script>
 
 
 
 </body>
 </html>
-
-

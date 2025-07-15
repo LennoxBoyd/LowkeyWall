@@ -10,22 +10,22 @@ from .views import (
     terms_view,
     guidelines_view,
 )
+<<<<<<< HEAD
+=======
+from django.contrib import admin
+>>>>>>> 7584a8d5f1e0269376464270f8f68cdecc190cae
 
 urlpatterns = [
-    # Anonymous homepage
     path('', views.index, name='index'),
-
-    # Confession-related
     path('post/', post_confession, name='post_confession'),
     path('browse/', browse_confessions, name='browse_confessions'),
     path('upvote/<int:confession_id>/', views.upvote_confession, name='upvote_confession'),
     path('confession/<int:pk>/', confession_detail, name='confession_detail'),
-
-    # Static Pages
     path('about/', aboutus_view, name='aboutus'),
     path('contact/', contact_page, name='contact'),
     path('privacy_policy/', privacy_policy_view, name='privacy_policy'),
     path('guidelines/', guidelines_view, name='guidelines'),
+<<<<<<< HEAD
     path('terms/', terms_view, name='terms'),
 
     # MPESA
@@ -38,5 +38,11 @@ urlpatterns = [
 
     # API endpoint
     path('api/confessions/', views.get_confessions, name='api_confessions'),
+=======
+    path('terms/', views.terms_view, name='terms'),
+    path('mpesa/pay/', views.mpesa_pay, name='mpesa_pay'),
+    path('mpesa/callback/', views.mpesa_callback, name='mpesa_callback'),
+    path('help/', views.help_center, name='help_center'),
+    path('learn-more-ads/', views.learn_more_ads_view, name='learn_more_ads'),
+>>>>>>> 7584a8d5f1e0269376464270f8f68cdecc190cae
 ]
-

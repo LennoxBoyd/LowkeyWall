@@ -25,11 +25,16 @@ TOPIC_CHOICES = [
     ('Other', 'Other'),
 ]
 
+
 FEELING_CHOICES = [
-    ('yes', 'Yes'),
-    ('no', 'No'),
-    ('prefer-not-say', 'Prefer not to say'),
+    ('Happy', 'Happy'),
+    ('Sad', 'Sad'),
+    ('Angry', 'Angry'),
+    ('Confused', 'Confused'),
+    ('Anxious', 'Anxious'),
+    # Add as many as you want
 ]
+
 
 
 PLAN_CHOICES = [
