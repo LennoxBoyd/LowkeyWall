@@ -53,9 +53,6 @@ def index(request):
         'active_users': active_users,
         'quote': quote,
     })
-
-
-
 def post_confession(request):
     if request.method == 'POST':
         form = ConfessionForm(request.POST)
@@ -65,6 +62,40 @@ def post_confession(request):
     else:
         form = ConfessionForm()
     return render(request, 'post_confession.html', {'form': form})
+
+
+
+
+
+
+
+@csrf_exempt
+def upvote_confession(request, confession_id):
+    if request.method == "POST":
+        confession = get_object_or_404(Confession, id=confession_id)
+
+        if not request.session.session_key:
+            request.session.create()
+
+        session_key = request.session.session_key
+
+        upvote, created = Upvote.objects.get_or_create(
+            confession=confession,
+            session_key=session_key
+        )
+
+        if not created:
+            upvote.delete()
+            new_count = confession.upvotes.count()
+            return JsonResponse({'status': 'removed', 'new_count': new_count})
+        else:
+            new_count = confession.upvotes.count()
+            return JsonResponse({'status': 'added', 'new_count': new_count})
+
+    return HttpResponseBadRequest("Invalid request method.")
+
+
+
 
 
 def browse_confessions(request):
@@ -121,30 +152,8 @@ def confession_detail(request, pk):
 
 # -------------------- Upvote --------------------
 
-@csrf_exempt
-def upvote_confession(request, confession_id):
-    if request.method == "POST":
-        confession = get_object_or_404(Confession, id=confession_id)
 
-        if not request.session.session_key:
-            request.session.create()
 
-        session_key = request.session.session_key
-
-        upvote, created = Upvote.objects.get_or_create(
-            confession=confession,
-            session_key=session_key
-        )
-
-        if not created:
-            upvote.delete()
-            new_count = confession.upvotes.count()
-            return JsonResponse({'status': 'removed', 'new_count': new_count})
-        else:
-            new_count = confession.upvotes.count()
-            return JsonResponse({'status': 'added', 'new_count': new_count})
-
-    return HttpResponseBadRequest("Invalid request method.")
 
 
   
@@ -152,6 +161,7 @@ def upvote_confession(request, confession_id):
 
 
 # -------------------- M-PESA Payment --------------------
+
 
 def toggle_upvote(request, confession_id):
     confession = get_object_or_404(Confession, id=confession_id)
@@ -178,7 +188,6 @@ def toggle_upvote(request, confession_id):
 
 
 # ---------------------- M-PESA Payment ----------------------
-
 
 
 def get_access_token():
@@ -280,42 +289,9 @@ def contact_page(request):
         form = ContactForm()
     return render(request, 'contact.html', {'form': form})
 
-
-
-
-
-@csrf_exempt
-def upvote_confession(request, confession_id):
-    if request.method == "GET":  # Or POST if you want
-        confession = get_object_or_404(Confession, id=confession_id)
-
-        # Ensure session key exists
-        if not request.session.session_key:
-            request.session.create()
-
-        session_key = request.session.session_key
-
-        upvote, created = Upvote.objects.get_or_create(
-            confession=confession,
-            session_key=session_key
-        )
-
-        if not created:
-            upvote.delete()
-            count = confession.upvotes.count()
-            return JsonResponse({'status': 'removed', 'count': count})
-        else:
-            count = confession.upvotes.count()
-            return JsonResponse({'status': 'added', 'count': count})
-
-    return JsonResponse({'error': 'Invalid method'}, status=400)
-
-
-
-
 def learn_more_ads_view(request):
     return render(request, 'learn_more_ads.html')
 
 
 def help_center(request):
-    return render(request, 'help_center.html')
+    return render(request, 'help_center.html')   
