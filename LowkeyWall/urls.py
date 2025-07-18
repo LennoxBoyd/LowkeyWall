@@ -38,8 +38,11 @@ urlpatterns = [
     path('api/confessions/', views.get_confessions, name='api_confessions'),
 
     path('my_confessions/', views.my_confessions, name='my_confessions'),
-    path('reply/<int:confession_id>/', views.post_reply, name='post_reply'),
-    path('reply/<int:confession_id>/<int:parent_id>/', views.post_reply, name='post_reply'),
+   # For replies to top-level comments
+path('reply/<int:confession_id>/comment/<int:comment_id>/', views.post_reply_to_comment, name='post_reply_to_comment'),
+
+# For replies to other replies (nested)
+path('reply/<int:confession_id>/reply/<int:reply_id>/', views.post_reply_to_reply, name='post_reply_to_reply'),
 
 
 ]
