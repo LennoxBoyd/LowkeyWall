@@ -67,18 +67,14 @@
     <div class="mt-12">
       <h2 class="text-2xl font-bold mb-4">Responses</h2>
 
-      {% if comments %}
-        <div class="space-y-4 mb-6">
-          {% for comment in comments %}
-            <div class="bg-white/5 p-4 rounded-lg border border-white/10">
-              <p class="text-white">{{ comment.text }}</p>
-              <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
-      {% endif %}
+   <div class="space-y-6 mb-6">
+  {% for reply in replies %}
+    {% include "reply_item.html" with reply=reply %}
+  {% empty %}
+    <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
+  {% endfor %}
+</div>
+
 
       <!-- Response Form -->
       <form method="POST" class="space-y-4">
