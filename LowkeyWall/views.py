@@ -167,29 +167,38 @@ def confession_detail(request, pk):
         'replies': replies,      # ✅ Pass replies here!
         'comment_form': form,
     })
-
-def post_reply(request, confession_id, parent_id=None):
+def post_reply_to_comment(request, confession_id, comment_id):
     confession = get_object_or_404(Confession, id=confession_id)
-    parent = None
-    if parent_id:
-        parent = get_object_or_404(Reply, id=parent_id)
+    comment = get_object_or_404(Comment, id=comment_id)
 
     if request.method == 'POST':
         form = ReplyForm(request.POST)
         if form.is_valid():
             reply = form.save(commit=False)
             reply.confession = confession
-            reply.parent = parent
+            reply.parent_comment = comment  # 👉 use correct FK if you have
             reply.save()
             return JsonResponse({
                 'success': True,
-                'message': reply.message,
-                'created_at': reply.created_at.strftime("%Y-%m-%d %H:%M"),
-                'reply_id': reply.id,
-                'html': render_to_string("reply_item.html", {'reply': reply, 'reply_form': ReplyForm()}, request=request)
+                'html': render_to_string('reply_item.html', {'reply': reply}, request=request)
             })
-        else:
-            return JsonResponse({'success': False, 'errors': form.errors})
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
+def post_reply_to_reply(request, confession_id, reply_id):
+    confession = get_object_or_404(Confession, id=confession_id)
+    parent_reply = get_object_or_404(Reply, id=reply_id)
+
+    if request.method == 'POST':
+        form = ReplyForm(request.POST)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.confession = confession
+            reply.parent = parent_reply  # 👉 your Reply model’s FK to self
+            reply.save()
+            return JsonResponse({
+                'success': True,
+                'html': render_to_string('reply_item.html', {'reply': reply}, request=request)
+            })
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 
 # -------------------- Upvote --------------------
