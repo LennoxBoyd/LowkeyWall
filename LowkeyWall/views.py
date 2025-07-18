@@ -17,6 +17,8 @@ import base64
 
 from .models import Confession, Upvote, Quote, Comment, SupportPlan
 from .forms import ConfessionForm, MpesaPaymentForm, ContactForm, CommentForm
+from .forms import ReplyForm, CommentForm
+
 
 # -------------------- API --------------------
 
