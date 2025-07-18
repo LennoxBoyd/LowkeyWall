@@ -80,7 +80,7 @@
         <div class="reply-form-container hidden mt-2">
           <form method="POST" class="reply-form" data-reply-url="{% url 'post_reply' confession.id comment.id %}">
             {% csrf_token %}
-            <textarea name="comment" rows="2" class="w-full p-2 rounded bg-black/30 text-white" placeholder="Write your reply..."></textarea>
+            <textarea name="message" rows="2" class="w-full p-2 rounded bg-black/30 text-white" placeholder="Write your reply..."></textarea>
             <button type="submit" class="mt-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
               Post Reply
             </button>
@@ -92,6 +92,7 @@
 {% else %}
   <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
 {% endif %}
+
 
 
   <!-- Top-level comment form -->
