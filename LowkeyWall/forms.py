@@ -8,7 +8,10 @@ from django import forms
 from .models import Reply, Comment
 
 
-# ✅ Full topic list used across forms and models
+from django import forms
+from .models import Confession, Comment, ContactMessage, Reply
+
+# ✅ Unified topic choices for dropdowns if needed
 TOPIC_CHOICES = [
     ('Love', 'Love'),
     ('Career', 'Career'),
@@ -26,7 +29,6 @@ TOPIC_CHOICES = [
     ('Success', 'Success'),
     ('Failure', 'Failure'),
     ('Secrets', 'Secrets'),
-    ('Other', 'Other'),
 ]
 
 class CommentForm(forms.ModelForm):
@@ -41,19 +43,28 @@ class CommentForm(forms.ModelForm):
             })
         }
 
-
-
+class ReplyForm(forms.ModelForm):
+    class Meta:
+        model = Reply
+        fields = ['message']  # ✅ matches your <textarea name="message">
 
 class MpesaPaymentForm(forms.Form):
-    phone_number = forms.CharField(label="Phone Number", max_length=15, widget=forms.TextInput(attrs={
-        'class': 'w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary focus:border-primary',
-        'placeholder': '07XX XXX XXX'
-    }))
-    amount = forms.DecimalField(label="Amount (KES)", min_value=1, widget=forms.NumberInput(attrs={
-        'class': 'w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary focus:border-primary',
-        'placeholder': '500'
-    }))
-
+    phone_number = forms.CharField(
+        label="Phone Number",
+        max_length=15,
+        widget=forms.TextInput(attrs={
+            'class': 'w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary focus:border-primary',
+            'placeholder': '07XX XXX XXX'
+        })
+    )
+    amount = forms.DecimalField(
+        label="Amount (KES)",
+        min_value=1,
+        widget=forms.NumberInput(attrs={
+            'class': 'w-full px-4 py-2 border border-gray-300 rounded focus:ring-primary focus:border-primary',
+            'placeholder': '500'
+        })
+    )
 
 class ContactForm(forms.ModelForm):
     class Meta:
@@ -64,13 +75,6 @@ class ContactForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'w-full p-2 border rounded', 'placeholder': 'Your Email'}),
             'message': forms.Textarea(attrs={'class': 'w-full p-2 border rounded', 'placeholder': 'Your Message'}),
         }
-
-
-
-# forms.py
-
-
-
 
 class ConfessionForm(forms.ModelForm):
     class Meta:
@@ -86,32 +90,10 @@ class ConfessionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ConfessionForm, self).__init__(*args, **kwargs)
-
-        # ✅ Remove "---------" by disabling empty_label on ChoiceField
         self.fields['topic'].empty_label = None
-
-        # Optional: styling for topic select field
         self.fields['topic'].widget.attrs.update({
             'class': 'w-full px-4 py-2 bg-gray-800 border border-white/10 rounded focus:outline-none focus:border-primary text-white'
         })
-
-
-class ReplyForm(forms.ModelForm):
-    class Meta:
-        model = Reply
-        fields = ['message']
-
-class CommentForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = ['text']
-
-
-
-
-
-    
-
 
 
 
