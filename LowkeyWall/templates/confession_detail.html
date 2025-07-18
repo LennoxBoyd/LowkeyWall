@@ -66,39 +66,33 @@
 <div class="mt-12">
   <h2 class="text-2xl font-bold mb-4">Responses</h2>
 
-  {% if comments %}
-    <div class="space-y-4 mb-6">
-      {% for comment in comments %}
-        <div class="bg-white/5 p-4 rounded-lg border border-white/10">
-          <p class="text-white">{{ comment.text }}</p>
-          <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
+{% if comments %}
+  <div class="space-y-4 mb-6">
+    {% for comment in comments %}
+      <div class="bg-white/5 p-4 rounded-lg border border-white/10">
+        <p class="text-white">{{ comment.text }}</p>
+        <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
 
-          <!-- ✅ Add Reply toggle button -->
-          <a href="#" class="text-primary hover:underline reply-toggle">Reply</a>
+        <!-- ✅ Reply toggle button for this comment -->
+        <a href="#" class="text-primary hover:underline reply-toggle">Reply</a>
 
-          <!-- ✅ Hidden inline reply form for this comment -->
-          <div class="reply-form-container hidden mt-2">
-            <form method="POST" class="reply-form" data-reply-url="{% url 'post_reply' confession.id comment.id %}">
-              {% csrf_token %}
-              <textarea name="text" rows="2" class="w-full p-2 rounded bg-black/30 text-white" placeholder="Write your reply..."></textarea>
-              <button type="submit" class="mt-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
-                Post Reply
-              </button>
-            </form>
-          </div>
-
-          <!-- ✅ Render nested replies for this comment -->
-          {% for reply in replies %}
-            {% if reply.parent.id == comment.id %}
-              {% include "reply_item.html" with reply=reply %}
-            {% endif %}
-          {% endfor %}
+        <!-- ✅ Inline reply form hidden by default -->
+        <div class="reply-form-container hidden mt-2">
+          <form method="POST" class="reply-form" data-reply-url="{% url 'post_reply' confession.id comment.id %}">
+            {% csrf_token %}
+            <textarea name="text" rows="2" class="w-full p-2 rounded bg-black/30 text-white" placeholder="Write your reply..."></textarea>
+            <button type="submit" class="mt-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
+              Post Reply
+            </button>
+          </form>
         </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
-  {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
+{% endif %}
+
 
   <!-- Top-level comment form -->
   <form method="POST" class="space-y-4 mt-8">
