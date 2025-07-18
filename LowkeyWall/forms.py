@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Confession, ContactMessage
 from .models import Confession, Comment
 from .models import Confession
+from .models import Reply
 
 
 # ✅ Full topic list used across forms and models
@@ -91,6 +92,14 @@ class ConfessionForm(forms.ModelForm):
         self.fields['topic'].widget.attrs.update({
             'class': 'w-full px-4 py-2 bg-gray-800 border border-white/10 rounded focus:outline-none focus:border-primary text-white'
         })
+
+
+
+class ReplyForm(forms.ModelForm):
+    class Meta:
+        model = Reply
+        fields = ['message']
+
 
     
 

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <title>{{ confession.topic }} - Confession</title>
-    <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png" />
+  <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
   <script>
@@ -63,22 +63,48 @@
       </span>
     </div>
 
-    <!-- Responses Section -->
-    <div class="mt-12">
-      <h2 class="text-2xl font-bold mb-4">Responses</h2>
+<div class="mt-12">
+  <h2 class="text-2xl font-bold mb-4">Responses</h2>
 
-      {% if comments %}
-        <div class="space-y-4 mb-6">
-          {% for comment in comments %}
-            <div class="bg-white/5 p-4 rounded-lg border border-white/10">
-              <p class="text-white">{{ comment.text }}</p>
-              <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
-            </div>
-          {% endfor %}
+{% if comments %}
+  <div class="space-y-4 mb-6">
+    {% for comment in comments %}
+      <div class="bg-white/5 p-4 rounded-lg border border-white/10">
+        <p class="text-white">{{ comment.text }}</p>
+        <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
+
+        <!-- ✅ Reply toggle button for this comment -->
+        <a href="#" class="text-primary hover:underline reply-toggle">Reply</a>
+
+        <!-- ✅ Inline reply form hidden by default -->
+        <div class="reply-form-container hidden mt-2">
+          <form method="POST" class="reply-form" data-reply-url="{% url 'post_reply' confession.id comment.id %}">
+            {% csrf_token %}
+            <textarea name="text" rows="2" class="w-full p-2 rounded bg-black/30 text-white" placeholder="Write your reply..."></textarea>
+            <button type="submit" class="mt-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
+              Post Reply
+            </button>
+          </form>
         </div>
-      {% else %}
-        <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
-      {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
+{% endif %}
+
+
+  <!-- Top-level comment form -->
+  <form method="POST" class="space-y-4 mt-8">
+    {% csrf_token %}
+    {{ comment_form.text }}
+    <button type="submit" class="px-6 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
+      Post Response
+    </button>
+  </form>
+</div>
+
+
 
       <!-- Response Form -->
       <form method="POST" class="space-y-4">
@@ -89,7 +115,62 @@
         </button>
       </form>
     </div>
+
+    <!-- ✅ Replies Section -->
+    {% if replies %}
+      <div class="mt-16">
+        <h2 class="text-2xl font-bold mb-4">Threaded Replies</h2>
+        <div class="space-y-6">
+          {% for reply in replies %}
+            {% include "reply_item.html" with reply=reply %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
   </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.reply-toggle').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const container = link.nextElementSibling;
+      container.classList.toggle('hidden');
+    });
+  });
+
+  document.addEventListener('submit', async (e) => {
+    if (e.target.matches('.reply-form')) {
+      e.preventDefault();
+      const form = e.target;
+      const url = form.dataset.replyUrl;
+
+      const formData = new FormData(form);
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+        },
+        body: formData
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        form.closest('.reply-form-container').classList.add('hidden');
+        form.reset();
+
+        // Append new reply under parent
+        const newReply = document.createElement('div');
+        newReply.innerHTML = data.html;
+        form.closest('div').appendChild(newReply);
+      } else {
+        alert('Error posting reply.');
+      }
+    }
+  });
+});
+</script>
 
 </body>
 </html>

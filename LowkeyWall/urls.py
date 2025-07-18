@@ -34,7 +34,12 @@ urlpatterns = [
     path('learn-more-ads/', views.learn_more_ads_view, name='learn_more_ads'),
 
     # API endpoint
+    
     path('api/confessions/', views.get_confessions, name='api_confessions'),
+
     path('my_confessions/', views.my_confessions, name='my_confessions'),
+    path('reply/<int:confession_id>/', views.post_reply, name='post_reply'),
+    path('reply/<int:confession_id>/<int:parent_id>/', views.post_reply, name='post_reply'),
+
 
 ]
