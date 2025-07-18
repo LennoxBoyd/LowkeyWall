@@ -23,12 +23,14 @@
     }
     .card-gradient {
       background: linear-gradient(135deg, rgba(0,178,255,0.08), rgba(139,0,255,0.08));
+      border: 1px solid rgba(255,255,255,0.05);
+      backdrop-filter: blur(8px);
     }
   </style>
 </head>
 
 <body class="text-white min-h-screen px-4 py-12">
-<div class="max-w-3xl mx-auto card-gradient p-8 rounded-2xl shadow-lg border border-white/10">
+<div class="max-w-3xl mx-auto card-gradient p-8 rounded-2xl shadow-lg">
 
   <!-- Back link -->
   <div class="mb-6">
@@ -48,10 +50,12 @@
       <i class="ri-emotion-line text-lg text-primary"></i> Feeling:
       <span class="font-medium">{{ confession.feeling|title }}</span>
     </span>
-    <span class="flex items-center gap-2">
-      <i class="ri-heart-line text-lg text-red-400"></i> Upvotes:
-      <span class="font-semibold">{{ confession.upvote_count }}</span>
-    </span>
+
+    <!-- ✅ Upvote Button -->
+    <button id="upvote-btn" class="flex items-center gap-2 hover:text-red-400 transition" data-id="{{ confession.id }}">
+      <i class="ri-heart-line text-lg"></i> Upvotes:
+      <span id="upvote-count" class="font-semibold">{{ confession.upvote_count }}</span>
+    </button>
   </div>
 
   <!-- ✅ Comments -->
@@ -92,13 +96,15 @@
   <h3 class="text-xl font-semibold mb-2">Add a Response</h3>
   <form method="POST" class="space-y-4">
     {% csrf_token %}
-    {{ comment_form.text }}
+    <label for="response-text" class="block text-sm text-white/60">Your Response</label>
+    <textarea id="response-text" name="text" rows="4" placeholder="Write your response..."
+      class="w-full p-4 rounded bg-black/30 text-white"></textarea>
     <button type="submit" class="px-6 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
       Post Response
     </button>
   </form>
 
-  <!-- ✅ Standalone replies thread (if any) -->
+  <!-- Standalone replies block if needed -->
   {% if replies %}
     <div class="mt-16">
       <h2 class="text-2xl font-bold mb-4">Threaded Replies</h2>
@@ -114,6 +120,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // Toggle reply form under comments
   document.querySelectorAll('.reply-toggle').forEach(link => {
     link.addEventListener('click', e => {
       e.preventDefault();
@@ -121,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // AJAX post reply under comment
   document.addEventListener('submit', async e => {
     if (e.target.matches('.reply-form')) {
       e.preventDefault();
@@ -144,8 +152,30 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  // ✅ AJAX upvote button
+  const upvoteBtn = document.getElementById('upvote-btn');
+  upvoteBtn.addEventListener('click', async () => {
+    const confessionId = upvoteBtn.dataset.id;
+    const csrfToken = '{{ csrf_token }}';  // Provided by Django template
+
+    const response = await fetch(`/upvote/${confessionId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': csrfToken,
+      },
+    });
+
+    const data = await response.json();
+    if (data.success) {
+      document.getElementById('upvote-count').textContent = data.upvote_count;
+    } else {
+      alert('Error upvoting.');
+    }
+  });
 });
 </script>
 
 </body>
 </html>
+
