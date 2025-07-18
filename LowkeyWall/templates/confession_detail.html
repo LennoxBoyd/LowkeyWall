@@ -2,43 +2,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>{{ confession.topic }} - Confession</title>
   <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: { primary: '#00B2FF', secondary: '#8B00FF' },
-          borderRadius: { 'button': '8px' }
+          borderRadius: { 'button': '8px' },
         }
       }
     }
   </script>
   <style>
-    body { background: linear-gradient(135deg, #0a0a0a, #1a1a1a); }
-    .card-gradient { background: linear-gradient(135deg, rgba(0,178,255,0.08), rgba(139,0,255,0.08)); }
+    body {
+      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+    }
+    .card-gradient {
+      background: linear-gradient(135deg, rgba(0,178,255,0.08), rgba(139,0,255,0.08));
+    }
   </style>
 </head>
 
 <body class="text-white min-h-screen px-4 py-12">
 <div class="max-w-3xl mx-auto card-gradient p-8 rounded-2xl shadow-lg border border-white/10">
 
-  <!-- Back -->
+  <!-- Back link -->
   <div class="mb-6">
-    <a href="{% url 'index' %}" class="inline-flex items-center text-primary hover:underline mb-2">
+    <a href="{% url 'index' %}" class="inline-flex items-center text-primary hover:underline">
       <i class="ri-arrow-left-line mr-2"></i> Back
     </a>
   </div>
 
   <!-- Confession -->
-  <div class="mb-6">
-    <h1 class="text-3xl font-bold mb-2">{{ confession.topic }}</h1>
-    <p class="text-white/60 text-sm italic">{{ confession.created_at|timesince }} ago</p>
-  </div>
-  <p class="text-lg leading-relaxed mb-8">{{ confession.message }}</p>
+  <h1 class="text-3xl font-bold mb-2">{{ confession.topic }}</h1>
+  <p class="text-white/60 text-sm italic mb-4">{{ confession.created_at|timesince }} ago</p>
+  <p class="text-lg mb-6">{{ confession.message }}</p>
 
   <!-- Meta -->
   <div class="flex items-center justify-between text-sm text-white/60 border-t border-white/10 pt-4 mb-10">
@@ -61,11 +63,11 @@
         <p>{{ comment.text }}</p>
         <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
 
-        <!-- Reply toggle for Comment -->
-        <a href="#" class="reply-toggle text-primary hover:underline text-sm">Reply</a>
+        <!-- Reply toggle for comment -->
+        <a href="#" class="reply-toggle text-primary hover:underline text-sm mt-2 inline-block">Reply</a>
         <div class="reply-form-container hidden mt-2">
           <form method="POST" class="reply-form"
-            data-reply-url="{% url 'post_reply_comment' confession.id comment.id %}">
+            data-reply-url="{% url 'post_reply_to_comment' confession.id comment.id %}">
             {% csrf_token %}
             <textarea name="message" rows="2" placeholder="Write your reply..."
               class="w-full p-2 rounded bg-black/30 text-white"></textarea>
@@ -75,7 +77,7 @@
           </form>
         </div>
 
-        <!-- Nested Replies for this Comment -->
+        <!-- Replies under comment -->
         {% for reply in comment.replies.all %}
           {% include 'reply_item.html' with reply=reply %}
         {% endfor %}
@@ -86,8 +88,9 @@
     <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
   {% endif %}
 
-  <!-- Top-level Comment Form -->
-  <form method="POST" class="space-y-4 mt-8">
+  <!-- Add new comment -->
+  <h3 class="text-xl font-semibold mb-2">Add a Response</h3>
+  <form method="POST" class="space-y-4">
     {% csrf_token %}
     {{ comment_form.text }}
     <button type="submit" class="px-6 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
@@ -95,7 +98,7 @@
     </button>
   </form>
 
-  <!-- ✅ Replies (Thread) -->
+  <!-- ✅ Standalone replies thread (if any) -->
   {% if replies %}
     <div class="mt-16">
       <h2 class="text-2xl font-bold mb-4">Threaded Replies</h2>
@@ -135,8 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.success) {
         form.closest('.reply-form-container').classList.add('hidden');
         form.reset();
-        const container = form.closest('div');
-        container.insertAdjacentHTML('beforeend', data.html);
+        form.closest('div').insertAdjacentHTML('beforeend', data.html);
       } else {
         alert('Error posting reply.');
       }
@@ -147,6 +149,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
-
-
-
