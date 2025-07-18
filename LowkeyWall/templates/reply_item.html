@@ -1,29 +1,22 @@
-<div class="bg-white/5 p-4 rounded-lg border border-white/10 ml-4">
-  <p class="text-white mb-2">{{ reply.message }}</p>
-  <span class="text-sm text-white/40">{{ reply.created_at|timesince }} ago</span>
+<div class="ml-4 mt-4 border-l-2 border-white/20 pl-4">
+  <p>{{ reply.message }}</p>
+  <span class="text-xs text-white/40">{{ reply.created_at|timesince }} ago</span>
 
-  <!-- Reply toggle button -->
-  <div class="mt-2">
-    <a href="#" class="reply-toggle text-primary hover:underline text-sm">Reply</a>
-  </div>
-
-  <!-- Hidden reply form -->
+  <!-- Reply toggle for nested reply -->
+  <a href="#" class="reply-toggle text-primary block mt-2 text-sm">Reply</a>
   <div class="reply-form-container hidden mt-2">
-    <form method="POST" class="reply-form space-y-2" data-reply-url="{% url 'post_reply' reply.confession.id reply.id %}">
+    <form method="POST" class="reply-form"
+      data-reply-url="{% url 'post_reply_to_reply' reply.confession.id reply.id %}">
       {% csrf_token %}
-      <textarea name="message" rows="2" class="w-full p-2 rounded bg-black/20 border border-white/10 text-white placeholder-white/40" placeholder="Write your reply..."></textarea>
-      <button type="submit" class="px-4 py-1 bg-gradient-to-r from-primary to-secondary rounded-button text-white text-sm font-semibold hover:opacity-90">
-        Post Reply
-      </button>
+      <textarea name="message" rows="2" placeholder="Write nested reply..."
+        class="w-full p-2 bg-black/30 rounded"></textarea>
+      <button type="submit" class="mt-2 px-4 py-1 bg-primary text-black rounded">Post</button>
     </form>
   </div>
 
-  <!-- Render nested children -->
-  {% if reply.children.all %}
-    <div class="mt-4 space-y-4">
-      {% for child in reply.children.all %}
-        {% include "reply_item.html" with reply=child %}
-      {% endfor %}
-    </div>
-  {% endif %}
+  <!-- Children replies -->
+  {% for child in reply.children.all %}
+    {% include "reply_item.html" with reply=child %}
+  {% endfor %}
 </div>
+
