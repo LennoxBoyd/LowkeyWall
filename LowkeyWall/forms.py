@@ -4,6 +4,8 @@ from .models import Confession, ContactMessage
 from .models import Confession, Comment
 from .models import Confession
 from .models import Reply
+from django import forms
+from .models import Reply, Comment
 
 
 # ✅ Full topic list used across forms and models
@@ -94,11 +96,18 @@ class ConfessionForm(forms.ModelForm):
         })
 
 
-
 class ReplyForm(forms.ModelForm):
     class Meta:
         model = Reply
         fields = ['message']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
+
+
+
 
 
     
