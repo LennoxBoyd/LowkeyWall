@@ -81,12 +81,14 @@ class Comment(models.Model):
 
 class Reply(models.Model):
     confession = models.ForeignKey(Confession, on_delete=models.CASCADE, related_name='replies')
+    parent_comment = models.ForeignKey(Comment, null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='children')
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Reply to Confession {self.confession.id}"
+
 
     def get_reply_url(self):
         return reverse('post_reply', kwargs={
