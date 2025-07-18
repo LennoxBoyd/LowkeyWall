@@ -39,10 +39,9 @@ urlpatterns = [
 
     path('my_confessions/', views.my_confessions, name='my_confessions'),
    # For replies to top-level comments
-path('reply/<int:confession_id>/comment/<int:comment_id>/', views.post_reply_to_comment, name='post_reply_to_comment'),
+   path('reply/comment/<int:confession_id>/<int:comment_id>/', views.post_reply_to_comment, name='post_reply_to_comment'),
+   path('reply/reply/<int:confession_id>/<int:reply_id>/', views.post_reply_to_reply, name='post_reply_to_reply'),
 
-# For replies to other replies (nested)
-path('reply/<int:confession_id>/reply/<int:reply_id>/', views.post_reply_to_reply, name='post_reply_to_reply'),
 
 
 ]
