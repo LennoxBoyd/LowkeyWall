@@ -160,16 +160,24 @@ document.addEventListener('DOMContentLoaded', () => {
         form.closest('.reply-form-container').classList.add('hidden');
         form.reset();
 
-        // Append new reply under parent
-        const newReply = document.createElement('div');
-        newReply.innerHTML = data.html;
-        form.closest('div').appendChild(newReply);
+        // ✅ Append new reply to parent container
+        const parentContainer = form.closest('.reply-item'); // or '.reply-block' if you wrap each reply
+        if (parentContainer) {
+          const childrenContainer = parentContainer.querySelector('.children-container');
+          if (childrenContainer) {
+            childrenContainer.insertAdjacentHTML('beforeend', data.html);
+          } else {
+            // If no dedicated children container, append directly
+            parentContainer.insertAdjacentHTML('beforeend', data.html);
+          }
+        }
       } else {
         alert('Error posting reply.');
       }
     }
   });
 });
+
 </script>
 
 </body>
