@@ -6,147 +6,144 @@
   <title>{{ confession.topic }} - Confession</title>
   <link rel="icon" href="{% static 'images/favicon.png' %}" type="image/png" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
-          colors: {
-            primary: '#00B2FF',
-            secondary: '#8B00FF'
-          },
-          borderRadius: {
-            'button': '8px'
-          }
+          colors: { primary: '#00B2FF', secondary: '#8B00FF' },
+          borderRadius: { 'button': '8px' }
         }
       }
     }
   </script>
   <style>
-    body {
-      background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
-    }
-    .card-gradient {
-      background: linear-gradient(135deg, rgba(0,178,255,0.08), rgba(139,0,255,0.08));
-    }
+    body { background: linear-gradient(135deg, #0a0a0a, #1a1a1a); }
+    .card-gradient { background: linear-gradient(135deg, rgba(0,178,255,0.08), rgba(139,0,255,0.08)); }
   </style>
 </head>
+
 <body class="text-white min-h-screen px-4 py-12">
+<div class="max-w-3xl mx-auto card-gradient p-8 rounded-2xl shadow-lg border border-white/10">
 
-  <div class="max-w-3xl mx-auto card-gradient p-8 rounded-2xl shadow-lg border border-white/10">
-
-    <!-- Back Button -->
-    <div class="mb-6">
-      <a href="{% url request.GET.next|default:'index' %}" class="inline-flex items-center text-primary hover:underline mb-2">
-        <i class="ri-arrow-left-line mr-2"></i> Back
-      </a>
-    </div>
-
-    <!-- Confession Content -->
-    <div class="mb-6">
-      <h1 class="text-3xl font-bold text-white mb-2">{{ confession.topic }}</h1>
-      <p class="text-white/60 text-sm italic">{{ confession.created_at|timesince }} ago</p>
-    </div>
-
-    <div class="mb-8">
-      <p class="text-lg leading-relaxed text-white/90">{{ confession.message }}</p>
-    </div>
-
-    <div class="flex items-center justify-between text-sm text-white/60 border-t border-white/10 pt-4 mb-10">
-      <span class="flex items-center gap-2">
-        <i class="ri-emotion-line text-lg text-primary"></i>
-        Feeling: <span class="font-medium text-white">{{ confession.feeling|title }}</span>
-      </span>
-      <span class="flex items-center gap-2">
-        <i class="ri-heart-line text-lg text-red-400"></i>
-        Upvotes: <span class="font-semibold text-white">{{ confession.upvote_count }}</span>
-      </span>
-    </div>
-
-    <!-- ✅ Top-level Comments -->
-    <div class="mt-12">
-      <h2 class="text-2xl font-bold mb-4">Responses</h2>
-
-      {% if comments %}
-        <div class="space-y-4 mb-6">
-          {% for comment in comments %}
-            <div class="bg-white/5 p-4 rounded-lg border border-white/10">
-              <p class="text-white">{{ comment.text }}</p>
-              <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
-            </div>
-          {% endfor %}
-        </div>
-      {% else %}
-        <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
-      {% endif %}
-
-      <!-- ✅ Top-level Comment Form -->
-      <form method="POST" class="space-y-4 mt-8">
-        {% csrf_token %}
-        {{ comment_form.text }}
-        <button type="submit" class="px-6 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
-          Post Response
-        </button>
-      </form>
-    </div>
-
-    <!-- ✅ Threaded Replies -->
-    {% if replies %}
-      <div class="mt-16">
-        <h2 class="text-2xl font-bold mb-4">Threaded Replies</h2>
-        <div class="space-y-6">
-          {% for reply in replies %}
-            {% include "reply_item.html" with reply=reply %}
-          {% endfor %}
-        </div>
-      </div>
-    {% endif %}
-
+  <!-- Back -->
+  <div class="mb-6">
+    <a href="{% url 'index' %}" class="inline-flex items-center text-primary hover:underline mb-2">
+      <i class="ri-arrow-left-line mr-2"></i> Back
+    </a>
   </div>
 
-  <!-- ✅ JS toggle + AJAX -->
-  <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.reply-toggle').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const container = link.nextElementSibling;
-        container.classList.toggle('hidden');
-      });
-    });
+  <!-- Confession -->
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold mb-2">{{ confession.topic }}</h1>
+    <p class="text-white/60 text-sm italic">{{ confession.created_at|timesince }} ago</p>
+  </div>
+  <p class="text-lg leading-relaxed mb-8">{{ confession.message }}</p>
 
-    document.addEventListener('submit', async (e) => {
-      if (e.target.matches('.reply-form')) {
-        e.preventDefault();
-        const form = e.target;
-        const url = form.dataset.replyUrl;
+  <!-- Meta -->
+  <div class="flex items-center justify-between text-sm text-white/60 border-t border-white/10 pt-4 mb-10">
+    <span class="flex items-center gap-2">
+      <i class="ri-emotion-line text-lg text-primary"></i> Feeling:
+      <span class="font-medium">{{ confession.feeling|title }}</span>
+    </span>
+    <span class="flex items-center gap-2">
+      <i class="ri-heart-line text-lg text-red-400"></i> Upvotes:
+      <span class="font-semibold">{{ confession.upvote_count }}</span>
+    </span>
+  </div>
 
-        const formData = new FormData(form);
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-          },
-          body: formData
-        });
-        const data = await response.json();
+  <!-- ✅ Comments -->
+  <h2 class="text-2xl font-bold mb-4">Responses</h2>
+  {% if comments %}
+    <div class="space-y-4 mb-6">
+      {% for comment in comments %}
+      <div class="bg-white/5 p-4 rounded-lg border border-white/10">
+        <p>{{ comment.text }}</p>
+        <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
 
-        if (data.success) {
-          form.closest('.reply-form-container').classList.add('hidden');
-          form.reset();
+        <!-- Reply toggle for Comment -->
+        <a href="#" class="reply-toggle text-primary hover:underline text-sm">Reply</a>
+        <div class="reply-form-container hidden mt-2">
+          <form method="POST" class="reply-form"
+            data-reply-url="{% url 'post_reply_comment' confession.id comment.id %}">
+            {% csrf_token %}
+            <textarea name="message" rows="2" placeholder="Write your reply..."
+              class="w-full p-2 rounded bg-black/30 text-white"></textarea>
+            <button type="submit" class="mt-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
+              Post Reply
+            </button>
+          </form>
+        </div>
 
-          // ✅ Append new reply to parent
-          const parentContainer = form.closest('.reply-item') || form.closest('div');
-          if (parentContainer) {
-            parentContainer.insertAdjacentHTML('beforeend', data.html);
-          }
-        } else {
-          alert('Error posting reply.');
-        }
-      }
+        <!-- Nested Replies for this Comment -->
+        {% for reply in comment.replies.all %}
+          {% include 'reply_item.html' with reply=reply %}
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
+  {% endif %}
+
+  <!-- Top-level Comment Form -->
+  <form method="POST" class="space-y-4 mt-8">
+    {% csrf_token %}
+    {{ comment_form.text }}
+    <button type="submit" class="px-6 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
+      Post Response
+    </button>
+  </form>
+
+  <!-- ✅ Replies (Thread) -->
+  {% if replies %}
+    <div class="mt-16">
+      <h2 class="text-2xl font-bold mb-4">Threaded Replies</h2>
+      <div class="space-y-6">
+        {% for reply in replies %}
+          {% include "reply_item.html" with reply=reply %}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.reply-toggle').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      link.nextElementSibling.classList.toggle('hidden');
     });
   });
-  </script>
+
+  document.addEventListener('submit', async e => {
+    if (e.target.matches('.reply-form')) {
+      e.preventDefault();
+      const form = e.target;
+      const url = form.dataset.replyUrl;
+      const formData = new FormData(form);
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': formData.get('csrfmiddlewaretoken') },
+        body: formData
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        form.closest('.reply-form-container').classList.add('hidden');
+        form.reset();
+        const container = form.closest('div');
+        container.insertAdjacentHTML('beforeend', data.html);
+      } else {
+        alert('Error posting reply.');
+      }
+    }
+  });
+});
+</script>
 
 </body>
 </html>
