@@ -63,53 +63,25 @@
       </span>
     </div>
 
-<div class="mt-12">
-  <h2 class="text-2xl font-bold mb-4">Responses</h2>
+    <!-- ✅ Top-level Comments -->
+    <div class="mt-12">
+      <h2 class="text-2xl font-bold mb-4">Responses</h2>
 
-{% if comments %}
-  <div class="space-y-4 mb-6">
-    {% for comment in comments %}
-      <div class="bg-white/5 p-4 rounded-lg border border-white/10">
-        <p class="text-white">{{ comment.text }}</p>
-        <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
-
-        <!-- ✅ Reply toggle button for this comment -->
-<!-- ✅ This is perfect -->
-<a href="#" class="reply-toggle text-primary hover:underline text-sm">Reply</a>
-
-        <!-- ✅ Inline reply form hidden by default -->
-        <div class="reply-form-container hidden mt-2">
-          <form method="POST" class="reply-form" data-reply-url="{% url 'post_reply' confession.id comment.id %}">
-            {% csrf_token %}
-            <textarea name="message" rows="2" class="w-full p-2 rounded bg-black/30 text-white" placeholder="Write your reply..."></textarea>
-            <button type="submit" class="mt-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
-              Post Reply
-            </button>
-          </form>
+      {% if comments %}
+        <div class="space-y-4 mb-6">
+          {% for comment in comments %}
+            <div class="bg-white/5 p-4 rounded-lg border border-white/10">
+              <p class="text-white">{{ comment.text }}</p>
+              <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
+            </div>
+          {% endfor %}
         </div>
-      </div>
-    {% endfor %}
-  </div>
-{% else %}
-  <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
-{% endif %}
+      {% else %}
+        <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
+      {% endif %}
 
-
-
-  <!-- Top-level comment form -->
-  <form method="POST" class="space-y-4 mt-8">
-    {% csrf_token %}
-    {{ comment_form.text }}
-    <button type="submit" class="px-6 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
-      Post Response
-    </button>
-  </form>
-</div>
-
-
-
-      <!-- Response Form -->
-      <form method="POST" class="space-y-4">
+      <!-- ✅ Top-level Comment Form -->
+      <form method="POST" class="space-y-4 mt-8">
         {% csrf_token %}
         {{ comment_form.text }}
         <button type="submit" class="px-6 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
@@ -118,7 +90,7 @@
       </form>
     </div>
 
-    <!-- ✅ Replies Section -->
+    <!-- ✅ Threaded Replies -->
     {% if replies %}
       <div class="mt-16">
         <h2 class="text-2xl font-bold mb-4">Threaded Replies</h2>
@@ -132,59 +104,52 @@
 
   </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.reply-toggle').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const container = link.nextElementSibling;
-      container.classList.toggle('hidden');
-    });
-  });
-
-  document.addEventListener('submit', async (e) => {
-    if (e.target.matches('.reply-form')) {
-      e.preventDefault();
-      const form = e.target;
-      const url = form.dataset.replyUrl;
-
-      const formData = new FormData(form);
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
-        },
-        body: formData
+  <!-- ✅ JS toggle + AJAX -->
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.reply-toggle').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const container = link.nextElementSibling;
+        container.classList.toggle('hidden');
       });
-      const data = await response.json();
+    });
 
-      if (data.success) {
-        form.closest('.reply-form-container').classList.add('hidden');
-        form.reset();
+    document.addEventListener('submit', async (e) => {
+      if (e.target.matches('.reply-form')) {
+        e.preventDefault();
+        const form = e.target;
+        const url = form.dataset.replyUrl;
 
-        // ✅ Append new reply to parent container
-        const parentContainer = form.closest('.reply-item'); // or '.reply-block' if you wrap each reply
-        if (parentContainer) {
-          const childrenContainer = parentContainer.querySelector('.children-container');
-          if (childrenContainer) {
-            childrenContainer.insertAdjacentHTML('beforeend', data.html);
-          } else {
-            // If no dedicated children container, append directly
+        const formData = new FormData(form);
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+          },
+          body: formData
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          form.closest('.reply-form-container').classList.add('hidden');
+          form.reset();
+
+          // ✅ Append new reply to parent
+          const parentContainer = form.closest('.reply-item') || form.closest('div');
+          if (parentContainer) {
             parentContainer.insertAdjacentHTML('beforeend', data.html);
           }
+        } else {
+          alert('Error posting reply.');
         }
-      } else {
-        alert('Error posting reply.');
       }
-    }
+    });
   });
-});
-
-</script>
+  </script>
 
 </body>
 </html>
-
 
 
 
