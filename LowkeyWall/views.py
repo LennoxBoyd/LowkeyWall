@@ -7,7 +7,8 @@ from django.contrib import messages
 from django.utils import timezone
 from django.conf import settings
 from .models import Reply
-
+from django.template.loader import render_to_string
+from django.views.decorators.csrf import csrf_protect
 
 
 
@@ -171,6 +172,9 @@ def confession_detail(request, pk):
         'replies': replies,      # ✅ Pass replies here!
         'comment_form': form,
     })
+
+
+@csrf_protect
 def post_reply_to_comment(request, confession_id, comment_id):
     confession = get_object_or_404(Confession, id=confession_id)
     comment = get_object_or_404(Comment, id=comment_id)
@@ -180,13 +184,13 @@ def post_reply_to_comment(request, confession_id, comment_id):
         if form.is_valid():
             reply = form.save(commit=False)
             reply.confession = confession
-            reply.parent_comment = comment  # 👉 use correct FK if you have
+            reply.parent_comment = comment
             reply.save()
-            return JsonResponse({
-                'success': True,
-                'html': render_to_string('reply_item.html', {'reply': reply}, request=request)
-            })
+            html = render_to_string('reply_item.html', {'reply': reply}, request=request)
+            return JsonResponse({'success': True, 'html': html})
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+@csrf_protect
 def post_reply_to_reply(request, confession_id, reply_id):
     confession = get_object_or_404(Confession, id=confession_id)
     parent_reply = get_object_or_404(Reply, id=reply_id)
@@ -196,13 +200,12 @@ def post_reply_to_reply(request, confession_id, reply_id):
         if form.is_valid():
             reply = form.save(commit=False)
             reply.confession = confession
-            reply.parent = parent_reply  # 👉 your Reply model’s FK to self
+            reply.parent = parent_reply
             reply.save()
-            return JsonResponse({
-                'success': True,
-                'html': render_to_string('reply_item.html', {'reply': reply}, request=request)
-            })
+            html = render_to_string('reply_item.html', {'reply': reply}, request=request)
+            return JsonResponse({'success': True, 'html': html})
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
 
 
 # -------------------- Upvote --------------------
