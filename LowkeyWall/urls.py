@@ -35,4 +35,6 @@ urlpatterns = [
 
     # API endpoint
     path('api/confessions/', views.get_confessions, name='api_confessions'),
+    path('my_confessions/', views.my_confessions, name='my_confessions'),
+
 ]
