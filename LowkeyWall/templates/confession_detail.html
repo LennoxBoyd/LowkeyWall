@@ -59,13 +59,15 @@
   </div>
 
   <!-- ✅ Comments -->
-  <h2 class="text-2xl font-bold mb-4">Responses</h2>
-  {% if comments %}
-    <div class="space-y-4 mb-6">
-      {% for comment in comments %}
-      <div class="bg-white/5 p-4 rounded-lg border border-white/10">
-        <p>{{ comment.text }}</p>
-        <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
+ <div class="bg-white/5 p-4 rounded-lg border border-white/10">
+  <p>
+    {{ comment.text }}
+    {% if comment.is_author %}
+      <span class="ml-2 inline-block px-2 py-1 text-xs font-bold bg-primary text-black rounded">Author</span>
+    {% endif %}
+  </p>
+  <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
+
 
         <!-- Reply toggle for comment -->
         <a href="#" class="reply-toggle text-primary hover:underline text-sm mt-2 inline-block">Reply</a>
