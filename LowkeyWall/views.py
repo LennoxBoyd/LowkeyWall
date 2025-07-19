@@ -148,7 +148,6 @@ def browse_confessions(request):
         'form': form,
     })
 
-
 def confession_detail(request, pk):
     confession = get_object_or_404(Confession, pk=pk)
     comments = Comment.objects.filter(confession=confession).order_by('-created_at')
@@ -166,12 +165,22 @@ def confession_detail(request, pk):
     else:
         form = CommentForm()
 
+    # ✅ Mark if comment/reply belongs to the confession author
+    for comment in comments:
+        comment.is_author = (confession.session_owner == comment.confession.session_owner)
+        for reply in comment.replies.all():
+            reply.is_author = (reply.confession.session_owner == confession.session_owner)
+
+    for reply in replies:
+        reply.is_author = (reply.confession.session_owner == confession.session_owner)
+
     return render(request, 'confession_detail.html', {
         'confession': confession,
         'comments': comments,
-        'replies': replies,      # ✅ Pass replies here!
+        'replies': replies,
         'comment_form': form,
     })
+
 
 
 @csrf_protect
