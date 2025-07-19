@@ -120,15 +120,16 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Toggle reply form under comments
-  document.querySelectorAll('.reply-toggle').forEach(link => {
-    link.addEventListener('click', e => {
+
+  // ✅ Use event delegation for ALL reply toggles (comments & nested replies)
+  document.addEventListener('click', e => {
+    if (e.target.matches('.reply-toggle')) {
       e.preventDefault();
-      link.nextElementSibling.classList.toggle('hidden');
-    });
+      e.target.nextElementSibling.classList.toggle('hidden');
+    }
   });
 
-  // AJAX post reply under comment
+  // ✅ AJAX post reply under comment or reply
   document.addEventListener('submit', async e => {
     if (e.target.matches('.reply-form')) {
       e.preventDefault();
@@ -146,6 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.success) {
         form.closest('.reply-form-container').classList.add('hidden');
         form.reset();
+        // 🗂️ Append new reply HTML under this block
         form.closest('div').insertAdjacentHTML('beforeend', data.html);
       } else {
         alert('Error posting reply.');
@@ -173,8 +175,10 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Error upvoting.');
     }
   });
+
 });
 </script>
+
 
 </body>
 </html>
