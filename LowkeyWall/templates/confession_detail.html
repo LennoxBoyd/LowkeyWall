@@ -130,7 +130,6 @@
 
 </div>
 
-<!-- JS -->
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('click', e => {
@@ -147,6 +146,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const url = form.dataset.replyUrl;
       const formData = new FormData(form);
 
+      // ✅ ADD THIS: log exactly what you’re sending
+      console.log('🔍 Form data:', [...formData.entries()]);
+
       const response = await fetch(url, {
         method: 'POST',
         headers: { 'X-CSRFToken': formData.get('csrfmiddlewaretoken') },
@@ -159,6 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         form.reset();
         form.insertAdjacentHTML('beforebegin', data.html);
       } else {
+        console.log('❌ Backend error:', data);
         alert('Error posting reply.');
       }
     }
@@ -183,6 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
+
 
 </body>
 </html>
