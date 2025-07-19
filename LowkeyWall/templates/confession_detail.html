@@ -51,46 +51,46 @@
       <span class="font-medium">{{ confession.feeling|title }}</span>
     </span>
 
-    <!-- ✅ Upvote Button -->
+    <!-- Upvote Button -->
     <button id="upvote-btn" class="flex items-center gap-2 hover:text-red-400 transition" data-id="{{ confession.id }}">
       <i class="ri-heart-line text-lg"></i> Upvotes:
       <span id="upvote-count" class="font-semibold">{{ confession.upvote_count }}</span>
     </button>
   </div>
 
-  <!-- ✅ Comments -->
+  <!-- Comments -->
   <h2 class="text-2xl font-bold mb-4">Responses</h2>
   {% if comments %}
     <div class="space-y-4 mb-6">
       {% for comment in comments %}
-      <div class="bg-white/5 p-4 rounded-lg border border-white/10">
-        <p>
-          {{ comment.text }}
-          {% if comment.is_author %}
-            <span class="ml-2 inline-block px-2 py-1 text-xs font-bold bg-primary text-black rounded">Author</span>
-          {% endif %}
-        </p>
-        <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
+        <div class="bg-white/5 p-4 rounded-lg border border-white/10">
+          <p>
+            {{ comment.text }}
+            {% if comment.is_author %}
+              <span class="ml-2 inline-block px-2 py-1 text-xs font-bold bg-primary text-black rounded">Author</span>
+            {% endif %}
+          </p>
+          <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
 
-        <!-- Reply toggle for comment -->
-        <a href="#" class="reply-toggle text-primary hover:underline text-sm mt-2 inline-block">Reply</a>
-        <div class="reply-form-container hidden mt-2">
-          <form method="POST" class="reply-form"
-            data-reply-url="{% url 'post_reply_to_comment' confession.id comment.id %}">
-            {% csrf_token %}
-            <textarea name="message" rows="2" placeholder="Write your reply..."
-              class="w-full p-2 rounded bg-black/30 text-white"></textarea>
-            <button type="submit" class="mt-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
-              Post Reply
-            </button>
-          </form>
+          <!-- Reply toggle -->
+          <a href="#" class="reply-toggle text-primary hover:underline text-sm mt-2 inline-block">Reply</a>
+          <div class="reply-form-container hidden mt-2">
+            <form method="POST" class="reply-form"
+              data-reply-url="{% url 'post_reply_to_comment' confession.id comment.id %}">
+              {% csrf_token %}
+              <textarea name="message" rows="2" placeholder="Write your reply..."
+                class="w-full p-2 rounded bg-black/30 text-white"></textarea>
+              <button type="submit" class="mt-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
+                Post Reply
+              </button>
+            </form>
+          </div>
+
+          <!-- Replies under comment -->
+          {% for reply in comment.replies.all %}
+            {% include 'reply_item.html' with reply=reply %}
+          {% endfor %}
         </div>
-
-        <!-- Replies under comment -->
-        {% for reply in comment.replies.all %}
-          {% include 'reply_item.html' with reply=reply %}
-        {% endfor %}
-      </div>
       {% endfor %}
     </div>
   {% else %}
@@ -109,13 +109,11 @@
     </button>
   </form>
 
-
-
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // ✅ Use event delegation for ALL reply toggles
+  // Toggle reply form
   document.addEventListener('click', e => {
     if (e.target.matches('.reply-toggle')) {
       e.preventDefault();
@@ -123,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ✅ AJAX post reply under comment or reply
+  // AJAX post reply
   document.addEventListener('submit', async e => {
     if (e.target.matches('.reply-form')) {
       e.preventDefault();
@@ -148,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ✅ AJAX upvote button
+  // AJAX upvote
   const upvoteBtn = document.getElementById('upvote-btn');
   upvoteBtn.addEventListener('click', async () => {
     const confessionId = upvoteBtn.dataset.id;
@@ -156,9 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const response = await fetch(`/upvote/${confessionId}/`, {
       method: 'POST',
-      headers: {
-        'X-CSRFToken': csrfToken,
-      },
+      headers: { 'X-CSRFToken': csrfToken },
     });
 
     const data = await response.json();
@@ -173,5 +169,3 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
-
-
