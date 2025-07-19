@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.conf import settings
 
 
+
 import json
 import requests
 import base64
@@ -147,6 +148,9 @@ def confession_detail(request, pk):
     confession = get_object_or_404(Confession, pk=pk)
     comments = Comment.objects.filter(confession=confession).order_by('-created_at')
 
+    # 🗂️ ✅ Get only top-level replies (parent is null)
+    replies = confession.replies.filter(parent__isnull=True).order_by('created_at')
+
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
@@ -160,8 +164,32 @@ def confession_detail(request, pk):
     return render(request, 'confession_detail.html', {
         'confession': confession,
         'comments': comments,
+        'replies': replies,      # ✅ Pass replies here!
         'comment_form': form,
     })
+
+def post_reply(request, confession_id, parent_id=None):
+    confession = get_object_or_404(Confession, id=confession_id)
+    parent = None
+    if parent_id:
+        parent = get_object_or_404(Reply, id=parent_id)
+
+    if request.method == 'POST':
+        form = ReplyForm(request.POST)
+        if form.is_valid():
+            reply = form.save(commit=False)
+            reply.confession = confession
+            reply.parent = parent
+            reply.save()
+            return JsonResponse({
+                'success': True,
+                'message': reply.message,
+                'created_at': reply.created_at.strftime("%Y-%m-%d %H:%M"),
+                'reply_id': reply.id,
+                'html': render_to_string("reply_item.html", {'reply': reply, 'reply_form': ReplyForm()}, request=request)
+            })
+        else:
+            return JsonResponse({'success': False, 'errors': form.errors})
 
 
 # -------------------- Upvote --------------------

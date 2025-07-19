@@ -89,6 +89,46 @@
         </button>
       </form>
     </div>
+    <!-- Existing: Comments Section -->
+<div class="mt-12">
+  <h2 class="text-2xl font-bold mb-4">Responses</h2>
+
+  {% if comments %}
+    <div class="space-y-4 mb-6">
+      {% for comment in comments %}
+        <div class="bg-white/5 p-4 rounded-lg border border-white/10">
+          <p class="text-white">{{ comment.text }}</p>
+          <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
+  {% endif %}
+
+  <!-- Response Form -->
+  <form method="POST" class="space-y-4">
+    {% csrf_token %}
+    {{ comment_form.text }}
+    <button type="submit" class="px-6 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
+      Post Response
+    </button>
+  </form>
+</div>
+
+<!-- ✅ New: Replies Section -->
+{% if replies %}
+  <div class="mt-16">
+    <h2 class="text-2xl font-bold mb-4">Threaded Replies</h2>
+
+    <div class="space-y-6">
+      {% for reply in replies %}
+        {% include "reply_item.html" with reply=reply %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
   </div>
 
 </body>
