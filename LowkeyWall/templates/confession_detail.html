@@ -109,17 +109,7 @@
     </button>
   </form>
 
-  <!-- Standalone threaded replies block if needed -->
-  {% if replies %}
-    <div class="mt-16">
-      <h2 class="text-2xl font-bold mb-4">Threaded Replies</h2>
-      <div class="space-y-6">
-        {% for reply in replies %}
-          {% include "reply_item.html" with reply=reply %}
-        {% endfor %}
-      </div>
-    </div>
-  {% endif %}
+
 
 </div>
 
