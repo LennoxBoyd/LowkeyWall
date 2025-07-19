@@ -180,24 +180,6 @@ def confession_detail(request, confession_id):
 
 
 
-def post_reply_to_reply(request, confession_id, parent_id):
-    if request.method == "POST":
-        confession = Confession.objects.get(pk=confession_id)
-        parent_reply = Reply.objects.get(pk=parent_id)
-        message = request.POST.get("message")
-
-        if message:
-            reply = Reply.objects.create(
-                confession=confession,
-                parent=parent_reply,
-                message=message
-            )
-            reply.is_author = (confession.session_owner == request.session.session_key)
-
-            html = render_to_string("reply_item.html", {'reply': reply})
-            return JsonResponse({'success': True, 'html': html})
-    return JsonResponse({'success': False})
-
 
 
 
@@ -215,10 +197,12 @@ def post_reply_to_comment(request, confession_id, comment_id):
             reply = form.save(commit=False)
             reply.confession = confession
             reply.parent_comment = comment
+            reply.is_author = (confession.session_owner == request.session.session_key)  # ✅ CRUCIAL!
             reply.save()
             html = render_to_string('reply_item.html', {'reply': reply}, request=request)
             return JsonResponse({'success': True, 'html': html})
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
 
 @csrf_protect
 def post_reply_to_reply(request, confession_id, reply_id):
@@ -231,10 +215,12 @@ def post_reply_to_reply(request, confession_id, reply_id):
             reply = form.save(commit=False)
             reply.confession = confession
             reply.parent = parent_reply
+            reply.is_author = (confession.session_owner == request.session.session_key)  # ✅ CRUCIAL!
             reply.save()
             html = render_to_string('reply_item.html', {'reply': reply}, request=request)
             return JsonResponse({'success': True, 'html': html})
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
 
 
 
