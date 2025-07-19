@@ -73,7 +73,7 @@ class Confession(models.Model):
 class Comment(models.Model):
     confession = models.ForeignKey(Confession, on_delete=models.CASCADE)
     text = models.TextField()
-    is_author = models.BooleanField(default=False)  # ✅ Add this line!
+    is_author = models.BooleanField(default=False)  # ✅ MUST be here
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
