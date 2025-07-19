@@ -1,0 +1,16 @@
+<div class="ml-4 border-l-2 border-primary/40 pl-4 mt-4">
+  <div class="bg-gradient-to-br from-white/5 to-white/10 p-4 rounded-lg shadow-sm">
+    <p class="text-white/90">{{ reply.message }}</p>
+    <small class="text-white/50 text-xs block mt-2">{{ reply.created_at|timesince }} ago</small>
+
+    <!-- Reply button -->
+    <a href="{% url 'post_reply' confession.id reply.id %}"
+       class="inline-block mt-3 px-3 py-1 text-sm bg-gradient-to-r from-primary to-secondary rounded-button font-medium hover:opacity-90 transition">
+      Reply
+    </a>
+  </div>
+
+  {% for child in reply.children.all %}
+    {% include "reply_item.html" with reply=child %}
+  {% endfor %}
+</div>

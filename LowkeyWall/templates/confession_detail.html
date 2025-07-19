@@ -130,6 +130,48 @@
 {% endif %}
 
   </div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.reply-toggle').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const container = link.nextElementSibling;
+      container.classList.toggle('hidden');
+    });
+  });
+
+  document.addEventListener('submit', async (e) => {
+    if (e.target.matches('.reply-form')) {
+      e.preventDefault();
+      const form = e.target;
+      const url = form.dataset.replyUrl;
+
+      const formData = new FormData(form);
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+        },
+        body: formData
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        form.closest('.reply-form-container').classList.add('hidden');
+        form.reset();
+
+        // Append new reply under parent
+        const newReply = document.createElement('div');
+        newReply.innerHTML = data.html;
+        form.closest('div').appendChild(newReply);
+      } else {
+        alert('Error posting reply.');
+      }
+    }
+  });
+});
+</script>
+
 
 </body>
 </html>
