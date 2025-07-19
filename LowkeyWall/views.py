@@ -151,23 +151,20 @@ def browse_confessions(request):
 def confession_detail(request, pk):
     confession = get_object_or_404(Confession, pk=pk)
     comments = Comment.objects.filter(confession=confession).order_by('-created_at')
-
     replies = confession.replies.filter(parent__isnull=True).order_by('created_at')
 
+    # 🟢 Mark author for comments
     for comment in comments:
-        comment.is_author = (
-            comment.confession and comment.confession.session_owner == request.session.session_key
-        )
+        comment.is_author = confession.session_owner == request.session.session_key
 
-    def mark_children_safe(reply):
-        reply.is_author = (
-            reply.confession and reply.confession.session_owner == request.session.session_key
-        )
+    # 🟢 Mark author for top-level replies + nested
+    def mark_reply_author(reply):
+        reply.is_author = confession.session_owner == request.session.session_key
         for child in reply.children.all():
-            mark_children_safe(child)
+            mark_reply_author(child)
 
     for reply in replies:
-        mark_children_safe(reply)
+        mark_reply_author(reply)
 
     if request.method == 'POST':
         form = CommentForm(request.POST)
