@@ -19,7 +19,8 @@ import base64
 from .models import Confession, Upvote, Quote, Comment, SupportPlan
 from .forms import ConfessionForm, MpesaPaymentForm, ContactForm, CommentForm
 from .forms import ReplyForm, CommentForm
-
+from django.shortcuts import render, redirect
+from .forms import ConfessionForm
 
 # -------------------- API --------------------
 
@@ -60,8 +61,7 @@ def index(request):
         'active_users': active_users,
         'quote': quote,
     })
-from django.shortcuts import render, redirect
-from .forms import ConfessionForm
+
 
 def post_confession(request):
     if request.method == 'POST':
@@ -83,11 +83,6 @@ def post_confession(request):
         form = ConfessionForm()
 
     return render(request, 'post_confession.html', {'form': form})
-
-
-
-
-
 
 @csrf_exempt
 def upvote_confession(request, confession_id):
@@ -113,11 +108,7 @@ def upvote_confession(request, confession_id):
             return JsonResponse({'status': 'added', 'new_count': new_count})
 
     return HttpResponseBadRequest("Invalid request method.")
-
-
-
-
-
+     
 def browse_confessions(request):
     confessions = Confession.objects.all()
 
@@ -177,15 +168,6 @@ def confession_detail(request, confession_id):
         'comment_form': form
     })
 
-
-
-
-
-
-
-
-
-
 @csrf_protect
 def post_reply_to_comment(request, confession_id, comment_id):
     confession = get_object_or_404(Confession, id=confession_id)
@@ -230,23 +212,6 @@ def post_reply_to_reply(request, confession_id, reply_id):
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 
-
-
-
-
-# -------------------- Upvote --------------------
-
-
-
-
-
-  
-
-
-
-# -------------------- M-PESA Payment --------------------
-
-
 def toggle_upvote(request, confession_id):
     confession = get_object_or_404(Confession, id=confession_id)
 
@@ -272,7 +237,6 @@ def toggle_upvote(request, confession_id):
 
 
 # ---------------------- M-PESA Payment ----------------------
-
 
 def get_access_token():
     consumer_key = settings.MPESA_CONSUMER_KEY
