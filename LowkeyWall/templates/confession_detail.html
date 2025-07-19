@@ -59,15 +59,18 @@
   </div>
 
   <!-- ✅ Comments -->
- <div class="bg-white/5 p-4 rounded-lg border border-white/10">
-  <p>
-    {{ comment.text }}
-    {% if comment.is_author %}
-      <span class="ml-2 inline-block px-2 py-1 text-xs font-bold bg-primary text-black rounded">Author</span>
-    {% endif %}
-  </p>
-  <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
-
+  <h2 class="text-2xl font-bold mb-4">Responses</h2>
+  {% if comments %}
+    <div class="space-y-4 mb-6">
+      {% for comment in comments %}
+      <div class="bg-white/5 p-4 rounded-lg border border-white/10">
+        <p>
+          {{ comment.text }}
+          {% if comment.is_author %}
+            <span class="ml-2 inline-block px-2 py-1 text-xs font-bold bg-primary text-black rounded">Author</span>
+          {% endif %}
+        </p>
+        <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
 
         <!-- Reply toggle for comment -->
         <a href="#" class="reply-toggle text-primary hover:underline text-sm mt-2 inline-block">Reply</a>
@@ -106,7 +109,7 @@
     </button>
   </form>
 
-  <!-- Standalone replies block if needed -->
+  <!-- Standalone threaded replies block if needed -->
   {% if replies %}
     <div class="mt-16">
       <h2 class="text-2xl font-bold mb-4">Threaded Replies</h2>
@@ -122,8 +125,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-
-  // ✅ Use event delegation for ALL reply toggles (comments & nested replies)
+  // ✅ Use event delegation for ALL reply toggles
   document.addEventListener('click', e => {
     if (e.target.matches('.reply-toggle')) {
       e.preventDefault();
@@ -149,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (data.success) {
         form.closest('.reply-form-container').classList.add('hidden');
         form.reset();
-        // 🗂️ Append new reply HTML under this block
         form.closest('div').insertAdjacentHTML('beforeend', data.html);
       } else {
         alert('Error posting reply.');
@@ -161,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const upvoteBtn = document.getElementById('upvote-btn');
   upvoteBtn.addEventListener('click', async () => {
     const confessionId = upvoteBtn.dataset.id;
-    const csrfToken = '{{ csrf_token }}';  // Provided by Django template
+    const csrfToken = '{{ csrf_token }}';
 
     const response = await fetch(`/upvote/${confessionId}/`, {
       method: 'POST',
@@ -177,11 +178,10 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Error upvoting.');
     }
   });
-
 });
 </script>
 
-
 </body>
 </html>
+
 
