@@ -215,11 +215,12 @@ def post_reply_to_reply(request, confession_id, reply_id):
             reply = form.save(commit=False)
             reply.confession = confession
             reply.parent = parent_reply
-            reply.is_author = (confession.session_owner == request.session.session_key)  # ✅ CRUCIAL!
+            reply.is_author = (confession.session_owner == request.session.session_key)
             reply.save()
             html = render_to_string('reply_item.html', {'reply': reply}, request=request)
             return JsonResponse({'success': True, 'html': html})
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
 
 
 
