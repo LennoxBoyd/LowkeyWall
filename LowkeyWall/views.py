@@ -203,7 +203,6 @@ def post_reply_to_comment(request, confession_id, comment_id):
             return JsonResponse({'success': True, 'html': html})
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
-
 @csrf_protect
 def post_reply_to_reply(request, confession_id, reply_id):
     confession = get_object_or_404(Confession, id=confession_id)
@@ -215,11 +214,16 @@ def post_reply_to_reply(request, confession_id, reply_id):
             reply = form.save(commit=False)
             reply.confession = confession
             reply.parent = parent_reply
-            reply.is_author = (confession.session_owner == request.session.session_key)
+            reply.is_author = (
+                confession.session_owner == request.session.session_key
+                if confession.session_owner and request.session.session_key
+                else False
+            )
             reply.save()
             html = render_to_string('reply_item.html', {'reply': reply}, request=request)
             return JsonResponse({'success': True, 'html': html})
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
 
 
 
