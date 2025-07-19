@@ -73,10 +73,12 @@ class Confession(models.Model):
 class Comment(models.Model):
     confession = models.ForeignKey(Confession, on_delete=models.CASCADE)
     text = models.TextField()
+    is_author = models.BooleanField(default=False)  # ✅ Add this line!
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Comment on {self.confession.id} at {self.created_at.strftime('%Y-%m-%d %H:%M')}"
+
 
 
 class Reply(models.Model):
