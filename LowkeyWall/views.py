@@ -147,41 +147,34 @@ def browse_confessions(request):
         'confessions': page_obj,
         'form': form,
     })
-
 def confession_detail(request, pk):
     confession = get_object_or_404(Confession, pk=pk)
-    comments = Comment.objects.filter(confession=confession).order_by('-created_at')
-    replies = confession.replies.filter(parent__isnull=True).order_by('created_at')
 
-    # 🟢 Mark author for comments
+    # Get all comments
+    comments = Comment.objects.filter(confession=confession)
+
+    # Mark only comments as author if the session matches the confession owner
     for comment in comments:
-        comment.is_author = confession.session_owner == request.session.session_key
+        comment.is_author = (confession.session_owner == request.session.session_key)
 
-    # 🟢 Mark author for top-level replies + nested
+    # Get all top-level replies
+    replies = confession.replies.filter(parent__isnull=True)
+
+    # Mark each reply and its children
     def mark_reply_author(reply):
-        reply.is_author = confession.session_owner == request.session.session_key
+        reply.is_author = (confession.session_owner == request.session.session_key)
         for child in reply.children.all():
             mark_reply_author(child)
 
     for reply in replies:
         mark_reply_author(reply)
 
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.confession = confession
-            comment.save()
-            return redirect('confession_detail', pk=pk)
-    else:
-        form = CommentForm()
-
     return render(request, 'confession_detail.html', {
         'confession': confession,
         'comments': comments,
         'replies': replies,
-        'comment_form': form,
     })
+
 
 
 
