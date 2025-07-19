@@ -1,5 +1,10 @@
 <div class="ml-4 mt-4 border-l border-white/20 pl-4">
-  <p>{{ reply.message }}</p>
+  <p>
+    {{ reply.message }}
+    {% if reply.is_author %}
+      <span class="ml-2 inline-block px-2 py-1 text-xs font-bold bg-primary text-black rounded">Author</span>
+    {% endif %}
+  </p>
   <span class="text-xs text-white/40">{{ reply.created_at|timesince }} ago</span>
 
   <a href="#" class="reply-toggle text-primary hover:underline text-sm mt-2 inline-block">Reply</a>
@@ -20,5 +25,6 @@
     {% include 'reply_item.html' with reply=child %}
   {% endfor %}
 </div>
+
 
 
