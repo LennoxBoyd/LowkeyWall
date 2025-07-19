@@ -148,49 +148,47 @@ def browse_confessions(request):
         'form': form,
     })
 
-def confession_detail(request, pk):
-    confession = get_object_or_404(Confession, pk=pk)
+from django.http import JsonResponse
+from django.template.loader import render_to_string
+from .models import Confession, Comment, Reply
 
-    # Ensure the user has a session key
-    if not request.session.session_key:
-        request.session.create()
-
-    # If this confession does not yet have a session owner, set it
-    if not confession.session_owner:
-        confession.session_owner = request.session.session_key
-        confession.save()
-
-    # ✅ Handle posting a new comment
+def post_reply_to_comment(request, confession_id, comment_id):
     if request.method == "POST":
-        text = request.POST.get("text")
-        if text:
-            Comment.objects.create(confession=confession, text=text)
-            return redirect('confession_detail', pk=confession.pk)
+        confession = Confession.objects.get(pk=confession_id)
+        comment = Comment.objects.get(pk=comment_id)
+        message = request.POST.get("message")
 
-    # ✅ Get all comments for this confession
-    comments = Comment.objects.filter(confession=confession)
+        if message:
+            reply = Reply.objects.create(
+                confession=confession,
+                parent_comment=comment,
+                message=message
+            )
+            # Mark author flag for rendering
+            reply.is_author = (confession.session_owner == request.session.session_key)
 
-    # ✅ Mark which comments are by the confession author
-    for comment in comments:
-        comment.is_author = (confession.session_owner == request.session.session_key)
+            html = render_to_string("reply_item.html", {'reply': reply})
+            return JsonResponse({'success': True, 'html': html})
+    return JsonResponse({'success': False})
 
-    # ✅ Get all top-level replies
-    replies = confession.replies.filter(parent__isnull=True)
 
-    # ✅ Mark which replies are by the confession author
-    def mark_reply_author(reply):
-        reply.is_author = (confession.session_owner == request.session.session_key)
-        for child in reply.children.all():
-            mark_reply_author(child)
+def post_reply_to_reply(request, confession_id, parent_id):
+    if request.method == "POST":
+        confession = Confession.objects.get(pk=confession_id)
+        parent_reply = Reply.objects.get(pk=parent_id)
+        message = request.POST.get("message")
 
-    for reply in replies:
-        mark_reply_author(reply)
+        if message:
+            reply = Reply.objects.create(
+                confession=confession,
+                parent=parent_reply,
+                message=message
+            )
+            reply.is_author = (confession.session_owner == request.session.session_key)
 
-    return render(request, 'confession_detail.html', {
-        'confession': confession,
-        'comments': comments,
-        'replies': replies,
-    })
+            html = render_to_string("reply_item.html", {'reply': reply})
+            return JsonResponse({'success': True, 'html': html})
+    return JsonResponse({'success': False})
 
 
 
