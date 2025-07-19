@@ -8,17 +8,18 @@
   <span class="text-xs text-white/40">{{ reply.created_at|timesince }} ago</span>
 
   <a href="#" class="reply-toggle text-primary hover:underline text-sm mt-2 inline-block">Reply</a>
-  <div class="reply-form-container hidden mt-2">
-    <form method="POST" class="reply-form"
-      data-reply-url="{% url 'post_reply_to_reply' reply.confession.id reply.id %}">
-      {% csrf_token %}
-      <textarea name="message" rows="2" placeholder="Write nested reply..."
-        class="w-full p-2 rounded bg-black/30 text-white"></textarea>
-      <button type="submit" class="mt-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
-        Post Reply
-      </button>
-    </form>
-  </div>
+<div class="reply-form-container hidden mt-2">
+  <form method="POST" class="reply-form"
+    data-reply-url="{% url 'post_reply_to_reply' reply.confession.id reply.id %}">
+    {% csrf_token %}
+    <textarea name="message" rows="2" placeholder="Write nested reply..."
+      class="w-full p-2 rounded bg-black/30 text-white"></textarea>
+    <button type="submit" class="mt-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
+      Post Reply
+    </button>
+  </form>
+</div>
+
 
   <!-- Children -->
   {% for child in reply.children.all %}
