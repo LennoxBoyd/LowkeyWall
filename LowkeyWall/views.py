@@ -147,20 +147,37 @@ def browse_confessions(request):
         'confessions': page_obj,
         'form': form,
     })
+
 def confession_detail(request, pk):
     confession = get_object_or_404(Confession, pk=pk)
 
-    # Get all comments
+    # Ensure the user has a session key
+    if not request.session.session_key:
+        request.session.create()
+
+    # If this confession does not yet have a session owner, set it
+    if not confession.session_owner:
+        confession.session_owner = request.session.session_key
+        confession.save()
+
+    # ✅ Handle posting a new comment
+    if request.method == "POST":
+        text = request.POST.get("text")
+        if text:
+            Comment.objects.create(confession=confession, text=text)
+            return redirect('confession_detail', pk=confession.pk)
+
+    # ✅ Get all comments for this confession
     comments = Comment.objects.filter(confession=confession)
 
-    # Mark only comments as author if the session matches the confession owner
+    # ✅ Mark which comments are by the confession author
     for comment in comments:
         comment.is_author = (confession.session_owner == request.session.session_key)
 
-    # Get all top-level replies
+    # ✅ Get all top-level replies
     replies = confession.replies.filter(parent__isnull=True)
 
-    # Mark each reply and its children
+    # ✅ Mark which replies are by the confession author
     def mark_reply_author(reply):
         reply.is_author = (confession.session_owner == request.session.session_key)
         for child in reply.children.all():
@@ -174,6 +191,7 @@ def confession_detail(request, pk):
         'comments': comments,
         'replies': replies,
     })
+
 
 
 
