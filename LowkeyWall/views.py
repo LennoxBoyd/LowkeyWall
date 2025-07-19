@@ -141,21 +141,29 @@ def browse_confessions(request):
 
 
 
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Confession, Comment, Reply
+from .forms import CommentForm
+
 def confession_detail(request, confession_id):
+    # Get the confession
     confession = get_object_or_404(Confession, id=confession_id)
 
-    # Comments for this confession
+    # Get all comments for this confession
     comments = Comment.objects.filter(confession=confession).order_by('created_at')
 
-    # Replies for this confession
+    # Get all replies for this confession (for nested threading)
     replies = Reply.objects.filter(confession=confession).order_by('created_at')
 
+    # Handle new top-level comment form
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.confession = confession
-            comment.is_author = (confession.session_owner == request.session.session_key)
+            # mark as author if same session
+            if confession.session_owner == request.session.session_key:
+                comment.is_author = True
             comment.save()
             return redirect('confession_detail', confession_id=confession.id)
     else:
@@ -167,6 +175,7 @@ def confession_detail(request, confession_id):
         'replies': replies,
         'comment_form': form
     })
+
 
 @csrf_protect
 def post_reply_to_comment(request, confession_id, comment_id):
