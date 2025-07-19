@@ -150,6 +150,51 @@ def browse_confessions(request):
 
 
 
+from django.views.decorators.csrf import csrf_protect
+
+
+@csrf_protect
+def confession_detail(request, confession_id):
+    confession = get_object_or_404(Confession, id=confession_id)
+
+    # Make sure session exists
+    if not request.session.session_key:
+        request.session.create()
+
+    session_key = request.session.session_key
+
+    # Get all comments & replies
+    comments = Comment.objects.filter(confession=confession).order_by('created_at')
+    replies = Reply.objects.filter(confession=confession).order_by('created_at')
+
+    # Attach is_author flag
+    for comment in comments:
+        comment.is_author = (confession.session_owner == comment.session_owner)
+
+    for reply in replies:
+        reply.is_author = (confession.session_owner == reply.session_owner)
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.confession = confession
+            comment.session_owner = session_key  # track who made it
+            comment.save()
+            return redirect('confession_detail', confession_id=confession.id)
+    else:
+        form = CommentForm()
+
+    context = {
+        'confession': confession,
+        'comments': comments,
+        'replies': replies,
+        'comment_form': form,
+    }
+
+    return render(request, 'confession_detail.html', context)
+
+
 
 def post_reply_to_reply(request, confession_id, parent_id):
     if request.method == "POST":
