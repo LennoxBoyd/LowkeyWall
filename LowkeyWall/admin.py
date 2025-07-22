@@ -7,6 +7,12 @@ class ConfessionAdmin(admin.ModelAdmin):
     list_filter = ('topic', 'is_featured', 'created_at')
     search_fields = ('topic', 'message')
 
+    # ✅ This makes Django call the model method
+    def upvote_count(self, obj):
+        return obj.upvote_count()
+
+    upvote_count.short_description = 'Upvotes'
+
 admin.site.register(Comment)
 admin.site.register(Quote)
 admin.site.register(Reply)
@@ -15,6 +21,7 @@ admin.site.register(Upvote)
 @admin.register(SupportPlan)
 class SupportPlanAdmin(admin.ModelAdmin):
     list_display = ['name', 'price_usd']
+
 
 
 
