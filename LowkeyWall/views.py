@@ -80,7 +80,6 @@ def index(request):
 
 
 
-
 def post_confession(request):
     if request.method == 'POST':
         form = ConfessionForm(request.POST)
