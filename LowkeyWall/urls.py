@@ -41,6 +41,8 @@ urlpatterns = [
    # For replies to top-level comments
    path('reply/comment/<int:confession_id>/<int:comment_id>/', views.post_reply_to_comment, name='post_reply_to_comment'),
    path('reply/reply/<int:confession_id>/<int:reply_id>/', views.post_reply_to_reply, name='post_reply_to_reply'),
+   path('confession/<int:confession_id>/qr/', views.generate_qr, name='generate_qr'),
+ 
 
 
 
