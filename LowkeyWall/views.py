@@ -160,8 +160,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Confession, Comment, Reply
 from .forms import CommentForm
 
-def confession_detail(request, confession_id):
-    confession = get_object_or_404(Confession, id=confession_id)
+def confession_detail(request, pk):
+    confession = get_object_or_404(Confession, id=pk)
     comments = Comment.objects.filter(confession=confession).order_by('created_at')
     replies = Reply.objects.filter(confession=confession).order_by('created_at')
 
@@ -173,14 +173,14 @@ def confession_detail(request, confession_id):
             if confession.session_owner == request.session.session_key:
                 comment.is_author = True
             comment.save()
-            return redirect('confession_detail', confession_id=confession.id)
+            return redirect('confession_detail', pk=confession.id)
     else:
         form = CommentForm()
 
     return render(request, 'confession_detail.html', {
         'confession': confession,
         'comments': comments,
-        'replies': replies,  # ✅ just pass replies normally
+        'replies': replies,
         'comment_form': form,
     })
 
