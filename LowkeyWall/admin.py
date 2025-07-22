@@ -2,15 +2,16 @@ from django.contrib import admin
 from .models import Confession, Comment, Quote, SupportPlan, Reply, Upvote
 
 
-   @admin.register(Confession)
+@admin.register(Confession)
 class ConfessionAdmin(admin.ModelAdmin):
     list_display = ('topic', 'created_at', 'upvote_count_display', 'is_featured')
     list_filter = ('topic', 'is_featured', 'created_at')
     search_fields = ('topic', 'message')
 
     def upvote_count_display(self, obj):
-        return obj.upvote_count  # ✅ No ()
+        return obj.upvote_count  # ✅ Correct for @property
     upvote_count_display.short_description = 'Upvotes'
+
 
 
 
