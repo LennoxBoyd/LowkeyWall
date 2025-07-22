@@ -8,7 +8,7 @@ class ConfessionAdmin(admin.ModelAdmin):
     search_fields = ('topic', 'message')
 
     def upvote_count_display(self, obj):
-        return obj.upvote_count  # ✅ Use `.upvote_count` (the @property)
+        return obj.upvote_count  # ✅ Because upvote_count is @property
 
     upvote_count_display.short_description = 'Upvotes'
 
@@ -20,10 +20,3 @@ admin.site.register(Upvote)
 @admin.register(SupportPlan)
 class SupportPlanAdmin(admin.ModelAdmin):
     list_display = ['name', 'price_usd']
-
-
-
-
-
-
-
