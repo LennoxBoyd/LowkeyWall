@@ -15,6 +15,8 @@ from django.http import HttpResponse
 from django.urls import reverse
 
 
+from django.db.models import Count
+
 
 import json
 import requests
@@ -74,6 +76,7 @@ def index(request):
         'quote': quote,
         'most_upvoted_confession': most_upvoted_confession,
     })
+
 
 
 
