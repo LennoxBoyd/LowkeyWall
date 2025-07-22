@@ -3,9 +3,9 @@ from .models import Confession, Comment, Quote, SupportPlan, Reply, Upvote
 
 @admin.register(Confession)
 class ConfessionAdmin(admin.ModelAdmin):
-    list_display = ['topic', 'created_at', 'anonymous']
-    search_fields = ['message']
-    list_filter = ['topic', 'created_at']
+    list_display = ('topic', 'created_at', 'upvote_count', 'is_featured')
+    list_filter = ('topic', 'is_featured', 'created_at')
+    search_fields = ('topic', 'message')
 
 admin.site.register(Comment)
 admin.site.register(Quote)
@@ -15,5 +15,6 @@ admin.site.register(Upvote)
 @admin.register(SupportPlan)
 class SupportPlanAdmin(admin.ModelAdmin):
     list_display = ['name', 'price_usd']
+
 
 
