@@ -9,7 +9,10 @@ from django.conf import settings
 from .models import Reply
 from django.template.loader import render_to_string
 from django.views.decorators.csrf import csrf_protect
-
+import qrcode
+from io import BytesIO
+from django.http import HttpResponse
+from django.urls import reverse
 
 
 import json
@@ -370,3 +373,12 @@ def my_confessions(request):
     confessions = Confession.objects.filter(session_owner=session_key).order_by('-created_at')
 
     return render(request, 'my_confessions.html', {'confessions': confessions})
+
+def generate_qr(request, confession_id):
+    url = request.build_absolute_uri(reverse('confession_detail', args=[confession_id]))
+    img = qrcode.make(url)
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    return HttpResponse(buffer.getvalue(), content_type="image/png")
+   
+    
