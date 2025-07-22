@@ -123,24 +123,39 @@
       <div class="counter-animate text-4xl font-bold mb-2">{{ total_confessions|intcomma }}</div>
       <div class="text-white/60">Total Confessions</div>
     </div>
-    <div class="card-gradient p-8 rounded-lg text-center">
-      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
-        <i class="ri-heart-line text-2xl"></i>
-      </div>
-      <div class="counter-animate text-4xl font-bold mb-2">{{ total_upvotes|intcomma }}</div>
-      <div class="text-white/60">Total Upvotes</div>
+   <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+  <!-- Total Confessions -->
+  <div class="card-gradient p-8 rounded-lg text-center">
+    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+      <i class="ri-message-2-line text-2xl"></i>
     </div>
-    <div class="card-gradient p-8 rounded-lg text-center">
-      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
-        <i class="ri-user-line text-2xl"></i>
-   <div class="card-gradient p-8 rounded-lg text-center">
-  <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
-    <i class="ri-fire-line text-2xl"></i>
+    <div class="counter-animate text-4xl font-bold mb-2">{{ total_confessions|intcomma }}</div>
+    <div class="text-white/60">Total Confessions</div>
   </div>
-  <div class="counter-animate text-4xl font-bold mb-2">
-    {% if most_upvoted_confession %}{{ most_upvoted_confession.upvote_count|intcomma }}{% else %}0{% endif %}
+
+  <!-- Total Upvotes -->
+  <div class="card-gradient p-8 rounded-lg text-center">
+    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+      <i class="ri-heart-line text-2xl"></i>
+    </div>
+    <div class="counter-animate text-4xl font-bold mb-2">{{ total_upvotes|intcomma }}</div>
+    <div class="text-white/60">Total Upvotes</div>
   </div>
-  <div class="text-white/60">Most Upvoted</div>
+
+  <!-- Most Upvoted -->
+  <div class="card-gradient p-8 rounded-lg text-center">
+    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
+      <i class="ri-fire-line text-2xl"></i>
+    </div>
+    <div class="counter-animate text-4xl font-bold mb-2">
+      {% if most_upvoted_confession %}
+        {{ most_upvoted_confession.upvote_count|intcomma }}
+      {% else %}
+        0
+      {% endif %}
+    </div>
+    <div class="text-white/60">Most Upvoted</div>
+  </div>
 </div>
 
   </div>
