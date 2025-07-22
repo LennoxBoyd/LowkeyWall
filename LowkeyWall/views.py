@@ -156,28 +156,27 @@ def browse_confessions(request):
     })
 
 
-
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Confession, Comment, Reply
 from .forms import CommentForm
 
 def confession_detail(request, confession_id):
-    # Get the confession
     confession = get_object_or_404(Confession, id=confession_id)
 
-    # Get all comments for this confession
     comments = Comment.objects.filter(confession=confession).order_by('created_at')
-
-    # Get all replies for this confession (for nested threading)
     replies = Reply.objects.filter(confession=confession).order_by('created_at')
 
-    # Handle new top-level comment form
+    # Build a dict: {comment.id: [list of replies]}
+    comment_replies = {}
+    for reply in replies:
+        if reply.parent_comment_id:
+            comment_replies.setdefault(reply.parent_comment_id, []).append(reply)
+
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.confession = confession
-            # mark as author if same session
             if confession.session_owner == request.session.session_key:
                 comment.is_author = True
             comment.save()
@@ -188,8 +187,8 @@ def confession_detail(request, confession_id):
     return render(request, 'confession_detail.html', {
         'confession': confession,
         'comments': comments,
-        'replies': replies,
-        'comment_form': form
+        'comment_replies': comment_replies,
+        'comment_form': form,
     })
 
 
