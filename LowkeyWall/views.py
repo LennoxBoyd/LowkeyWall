@@ -50,6 +50,7 @@ def get_confessions(request):
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
+
 def index(request):
     confessions = Confession.objects.order_by('-created_at')[:6]
     featured_confessions = Confession.objects.filter(is_featured=True).order_by('-created_at')[:3]
@@ -59,13 +60,18 @@ def index(request):
     active_users = Upvote.objects.values('session_key').distinct().count()
     quote = Quote.objects.order_by('?').first()
 
+    most_upvoted_confession = Confession.objects.annotate(
+        upvote_count=models.Count('upvoted_ips')
+    ).order_by('-upvote_count').first()
+
     return render(request, 'index.html', {
         'confessions': confessions,
-        'featured_confessions': featured_confessions,  # ✅ Pass to template
+        'featured_confessions': featured_confessions,
         'total_confessions': total_confessions,
         'total_upvotes': total_upvotes,
         'active_users': active_users,
         'quote': quote,
+        'most_upvoted_confession': most_upvoted_confession,  # ✅ Pass it to your template!
     })
 
 
