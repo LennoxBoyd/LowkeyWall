@@ -52,6 +52,12 @@
       <i class="ri-heart-line text-lg"></i> Upvotes:
       <span id="upvote-count" class="font-semibold">{{ confession.upvote_count }}</span>
     </button>
+    <!-- confession_detail.html -->
+<a href="{% url 'generate_qr' confession.id %}"
+   class="inline-block mt-4 px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
+  Download QR Code
+</a>
+
   </div>
 
   <!-- Comments & Replies -->
