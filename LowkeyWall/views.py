@@ -49,6 +49,8 @@ User = get_user_model()
 
 def index(request):
     confessions = Confession.objects.order_by('-created_at')[:6]
+    featured_confessions = Confession.objects.filter(is_featured=True).order_by('-created_at')[:3]
+
     total_confessions = Confession.objects.count()
     total_upvotes = Upvote.objects.count()
     active_users = Upvote.objects.values('session_key').distinct().count()
@@ -56,11 +58,13 @@ def index(request):
 
     return render(request, 'index.html', {
         'confessions': confessions,
+        'featured_confessions': featured_confessions,  # ✅ Pass to template
         'total_confessions': total_confessions,
         'total_upvotes': total_upvotes,
         'active_users': active_users,
         'quote': quote,
     })
+
 
 
 def post_confession(request):
