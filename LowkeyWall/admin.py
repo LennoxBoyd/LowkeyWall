@@ -9,8 +9,8 @@ class ConfessionAdmin(admin.ModelAdmin):
 
     def upvote_count_display(self, obj):
         return obj.upvote_count()
-
     upvote_count_display.short_description = 'Upvotes'
+
 
 admin.site.register(Comment)
 admin.site.register(Quote)
