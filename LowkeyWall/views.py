@@ -162,15 +162,8 @@ from .forms import CommentForm
 
 def confession_detail(request, confession_id):
     confession = get_object_or_404(Confession, id=confession_id)
-
     comments = Comment.objects.filter(confession=confession).order_by('created_at')
     replies = Reply.objects.filter(confession=confession).order_by('created_at')
-
-    # Build a dict: {comment.id: [list of replies]}
-    comment_replies = {}
-    for reply in replies:
-        if reply.parent_comment_id:
-            comment_replies.setdefault(reply.parent_comment_id, []).append(reply)
 
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -187,7 +180,7 @@ def confession_detail(request, confession_id):
     return render(request, 'confession_detail.html', {
         'confession': confession,
         'comments': comments,
-        'comment_replies': comment_replies,
+        'replies': replies,  # ✅ just pass replies normally
         'comment_form': form,
     })
 
