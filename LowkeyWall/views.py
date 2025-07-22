@@ -13,6 +13,8 @@ import qrcode
 from io import BytesIO
 from django.http import HttpResponse
 from django.urls import reverse
+from django.db import models  # ✅ Make sure you have this at the top
+
 
 
 import json
