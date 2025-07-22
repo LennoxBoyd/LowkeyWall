@@ -62,7 +62,7 @@ def index(request):
     quote = Quote.objects.order_by('?').first()
 
     most_upvoted_confession = Confession.objects.annotate(
-        upvote_count=models.Count('upvoted_ips')
+        upvote_count=Count('upvotes')  # ✅ Use correct related_name!
     ).order_by('-upvote_count').first()
 
     return render(request, 'index.html', {
@@ -72,8 +72,9 @@ def index(request):
         'total_upvotes': total_upvotes,
         'active_users': active_users,
         'quote': quote,
-        'most_upvoted_confession': most_upvoted_confession,  # ✅ Pass it to your template!
+        'most_upvoted_confession': most_upvoted_confession,
     })
+
 
 
 
