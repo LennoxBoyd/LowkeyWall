@@ -67,10 +67,10 @@ class Confession(models.Model):
 
     def __str__(self):
         return f"{self.topic} ({self.display_name})"
+@property
+def upvote_count_property(self):
+    return self.upvotes.count()
 
-    @property
-    def upvote_count(self):
-        return self.upvotes.count()
 
 
 class Comment(models.Model):
