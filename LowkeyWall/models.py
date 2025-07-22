@@ -58,6 +58,8 @@ class Confession(models.Model):
     upvoted_ips = models.JSONField(default=list, blank=True)
     session_owner = models.CharField(max_length=40, blank=True, null=True)  # ✅ NEW FIELD
 
+    is_featured = models.BooleanField(default=False)  # ✅ Add this!
+
     def save(self, *args, **kwargs):
         if not self.display_name:
             self.display_name = f"Anonymous #{random.randint(100, 999)}"
@@ -69,6 +71,7 @@ class Confession(models.Model):
     @property
     def upvote_count(self):
         return self.upvotes.count()
+
 
 class Comment(models.Model):
     confession = models.ForeignKey(Confession, on_delete=models.CASCADE)
