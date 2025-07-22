@@ -49,16 +49,18 @@ class Quote(models.Model):
 
 class Confession(models.Model):
     topic = models.CharField(max_length=100, choices=TOPIC_CHOICES)
-    message = models.TextField(max_length=2000)  # ✅ Increased limit
+    message = models.TextField(max_length=2000)
     feeling = models.CharField(max_length=20, choices=FEELING_CHOICES)
     anonymous = models.BooleanField(default=True)
     ai_response_requested = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     display_name = models.CharField(max_length=50, blank=True)
     upvoted_ips = models.JSONField(default=list, blank=True)
-    session_owner = models.CharField(max_length=40, blank=True, null=True)  # ✅ NEW FIELD
+    session_owner = models.CharField(max_length=40, blank=True, null=True)
+    is_featured = models.BooleanField(default=False)
 
-    is_featured = models.BooleanField(default=False)  # ✅ Add this!
+    # ✅ ADD THIS:
+    upvote_count = models.IntegerField(default=0)
 
     def save(self, *args, **kwargs):
         if not self.display_name:
@@ -67,9 +69,11 @@ class Confession(models.Model):
 
     def __str__(self):
         return f"{self.topic} ({self.display_name})"
-@property
-def upvote_count_property(self):
-    return self.upvotes.count()
+
+    @property
+    def upvote_count_property(self):
+        return self.upvotes.count()
+
 
 
 
