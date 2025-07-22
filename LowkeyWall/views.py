@@ -61,10 +61,9 @@ def index(request):
     active_users = Upvote.objects.values('session_key').distinct().count()
     quote = Quote.objects.order_by('?').first()
 
-  most_upvoted_confession = Confession.objects.annotate(
-    upvote_count=Count('upvotes')
-).order_by('-upvote_count').first()
-
+    most_upvoted_confession = Confession.objects.annotate(
+        upvote_count=Count('upvotes')
+    ).order_by('-upvote_count').first()
 
     return render(request, 'index.html', {
         'confessions': confessions,
