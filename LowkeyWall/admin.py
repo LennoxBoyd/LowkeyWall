@@ -4,7 +4,7 @@ from .models import Confession, Comment, Quote, SupportPlan, Reply, Upvote
 
 @admin.register(Confession)
 class ConfessionAdmin(admin.ModelAdmin):
-    list_display = ('topic', 'created_at', 'upvote_count_display', 'is_featured')
+    list_display = ('topic', 'created_at', 'upvote_count', 'is_featured')
     list_filter = ('topic', 'is_featured', 'created_at')
     search_fields = ('topic', 'message')
 
