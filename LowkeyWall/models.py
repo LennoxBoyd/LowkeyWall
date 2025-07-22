@@ -60,7 +60,7 @@ class Confession(models.Model):
     is_featured = models.BooleanField(default=False)
 
     def upvote_count(self):
-        return self.upvotes.count()
+        return self.upvotes.count()  # ✅ Related name on Upvote FK
 
     def save(self, *args, **kwargs):
         if not self.display_name:
@@ -69,8 +69,6 @@ class Confession(models.Model):
 
     def __str__(self):
         return f"{self.topic} ({self.display_name})"
-
-
 
 
 
