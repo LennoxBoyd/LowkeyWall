@@ -46,6 +46,7 @@ class Quote(models.Model):
 
     def __str__(self):
         return f"{self.author}: {self.text[:50]}"
+
 class Confession(models.Model):
     topic = models.CharField(max_length=100, choices=TOPIC_CHOICES)
     message = models.TextField(max_length=2000)
@@ -58,8 +59,8 @@ class Confession(models.Model):
     session_owner = models.CharField(max_length=40, blank=True, null=True)
     is_featured = models.BooleanField(default=False)
 
-    # ✅ ADD THIS FIELD:
-    upvote_count = models.IntegerField(default=0)
+    def upvote_count(self):
+        return self.upvotes.count()
 
     def save(self, *args, **kwargs):
         if not self.display_name:
@@ -68,6 +69,7 @@ class Confession(models.Model):
 
     def __str__(self):
         return f"{self.topic} ({self.display_name})"
+
 
 
 
