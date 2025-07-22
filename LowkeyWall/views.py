@@ -63,9 +63,13 @@ def index(request):
     active_users = Upvote.objects.values('session_key').distinct().count()
     quote = Quote.objects.order_by('?').first()
 
-    most_upvoted_confession = Confession.objects.annotate(
-        upvote_count=Count('upvotes')
-    ).order_by('-upvote_count').first()
+    # ✅ Annotate properly for most upvoted confession
+    most_upvoted_confession = (
+        Confession.objects
+        .annotate(upvote_count=Count('upvotes'))
+        .order_by('-upvote_count')
+        .first()
+    )
 
     return render(request, 'index.html', {
         'confessions': confessions,
@@ -76,6 +80,7 @@ def index(request):
         'quote': quote,
         'most_upvoted_confession': most_upvoted_confession,
     })
+
 
 
 
@@ -139,7 +144,7 @@ def browse_confessions(request):
     if sort == 'latest':
         confessions = confessions.order_by('-created_at')
     elif sort == 'popular':
-        confessions = confessions.annotate(num_upvotes=Count('upvotes')).order_by('-num_upvotes')
+        confessions = confessions.annotate(upvote_count=Count('upvotes')).order_by('-upvote_count')
 
     # Search
     search = request.GET.get('search')
@@ -155,6 +160,7 @@ def browse_confessions(request):
         'confessions': page_obj,
         'form': form,
     })
+
 
 
 from django.shortcuts import render, get_object_or_404, redirect
