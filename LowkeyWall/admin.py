@@ -8,8 +8,9 @@ class ConfessionAdmin(admin.ModelAdmin):
     search_fields = ('topic', 'message')
 
     def upvote_count_display(self, obj):
-        return obj.upvote_count()  # ✅ Call the method on the model
-    upvote_count_display.short_description = 'Upvotes'  # ✅ Nice label in admin
+        return obj.upvote_count()
+
+    upvote_count_display.short_description = 'Upvotes'
 
 admin.site.register(Comment)
 admin.site.register(Quote)
@@ -19,6 +20,7 @@ admin.site.register(Upvote)
 @admin.register(SupportPlan)
 class SupportPlanAdmin(admin.ModelAdmin):
     list_display = ['name', 'price_usd']
+
 
 
 
