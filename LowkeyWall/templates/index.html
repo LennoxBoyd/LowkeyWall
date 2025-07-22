@@ -113,17 +113,9 @@
     {% endfor %}
   </div>
 </div>
+<!-- ✅ GOOD: Only one grid wrapper -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
 
-  
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-    <div class="card-gradient p-8 rounded-lg text-center">
-      <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
-        <i class="ri-message-2-line text-2xl"></i>
-      </div>
-      <div class="counter-animate text-4xl font-bold mb-2">{{ total_confessions|intcomma }}</div>
-      <div class="text-white/60">Total Confessions</div>
-    </div>
-   <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
   <!-- Total Confessions -->
   <div class="card-gradient p-8 rounded-lg text-center">
     <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center">
@@ -156,9 +148,9 @@
     </div>
     <div class="text-white/60">Most Upvoted</div>
   </div>
+
 </div>
 
-  </div>
 
   <div class="mt-16 mb-24">
     <div class="flex items-center justify-between mb-8">
