@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import Confession, Comment, Quote, SupportPlan, Reply, Upvote
 
-
 @admin.register(Confession)
 class ConfessionAdmin(admin.ModelAdmin):
     list_display = ('topic', 'created_at', 'upvote_count_display', 'is_featured')
@@ -9,19 +8,20 @@ class ConfessionAdmin(admin.ModelAdmin):
     search_fields = ('topic', 'message')
 
     def upvote_count_display(self, obj):
-        return obj.upvote_count()  # ✅ Call the method!
-    upvote_count_display.short_description = 'Upvotes'
+        return obj.upvote_count()  # ✅ This calls the method on your model
 
+    upvote_count_display.short_description = 'Upvotes'  # ✅ This sets the column header in admin
 
+# other registrations...
 admin.site.register(Comment)
 admin.site.register(Quote)
 admin.site.register(Reply)
 admin.site.register(Upvote)
 
-
 @admin.register(SupportPlan)
 class SupportPlanAdmin(admin.ModelAdmin):
     list_display = ['name', 'price_usd']
+
 
 
 
