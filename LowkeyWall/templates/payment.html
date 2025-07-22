@@ -45,6 +45,30 @@
   <!-- Donations & Ads Section -->
   <main class="pt-32 pb-12 px-6 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
     <!-- Donations Card -->
+    <!-- Featured Confessions Card -->
+<div class="bg-white/5 border border-white/10 rounded-xl p-6 shadow-xl hover:shadow-2xl transition md:col-span-2">
+  <h2 class="text-xl font-bold mb-4 flex items-center gap-2 text-primary">
+    <i class="ri-fire-line text-2xl"></i>
+    Featured Confessions
+  </h2>
+  {% if featured_confessions %}
+    <div class="grid md:grid-cols-3 gap-4">
+      {% for confession in featured_confessions %}
+        <a href="{% url 'confession_detail' confession.id %}" class="block bg-black/30 border border-white/10 rounded-lg p-4 hover:border-primary transition">
+          <h3 class="text-lg font-semibold mb-2">{{ confession.topic }}</h3>
+          <p class="text-sm text-white/70 mb-2">{{ confession.message|truncatewords:20 }}</p>
+          <div class="flex justify-between text-xs text-white/50">
+            <span>{{ confession.created_at|timesince }} ago</span>
+            <span>❤️ {{ confession.upvote_count }}</span>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-white/50 italic">No featured confessions yet.</p>
+  {% endif %}
+</div>
+
     <div class="bg-white/5 border border-white/10 rounded-xl p-6 shadow-xl hover:shadow-2xl transition">
       <h2 class="text-xl font-bold mb-4 flex items-center gap-2">
         <i class="ri-hand-heart-line text-primary text-2xl"></i>
