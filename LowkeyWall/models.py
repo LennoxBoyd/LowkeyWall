@@ -59,7 +59,7 @@ class Confession(models.Model):
     session_owner = models.CharField(max_length=40, blank=True, null=True)
     is_featured = models.BooleanField(default=False)
 
-    @property
+    
     def upvote_count(self):
         return self.upvotes.count()
 
