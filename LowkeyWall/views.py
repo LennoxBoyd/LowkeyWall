@@ -14,6 +14,9 @@ from io import BytesIO
 from django.http import HttpResponse
 from django.urls import reverse
 
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse, HttpResponseBadRequest
+from django.shortcuts import get_object_or_404
 
 from django.db.models import Count
 
@@ -106,6 +109,8 @@ def post_confession(request):
 
     return render(request, 'post_confession.html', {'form': form})
 
+
+
 @csrf_exempt
 def upvote_confession(request, confession_id):
     if request.method == "POST":
@@ -122,15 +127,26 @@ def upvote_confession(request, confession_id):
         )
 
         if not created:
+            # If upvote existed → remove it
             upvote.delete()
-            new_count = confession.upvotes.count()
-            return JsonResponse({'status': 'removed', 'new_count': new_count})
+            # ✅ Update the count field
+            confession.upvote_count = confession.upvotes.count()
+            confession.save()
+            return JsonResponse({
+                'status': 'removed',
+                'new_count': confession.upvote_count
+            })
         else:
-            new_count = confession.upvotes.count()
-            return JsonResponse({'status': 'added', 'new_count': new_count})
+            # If new upvote → update count
+            confession.upvote_count = confession.upvotes.count()
+            confession.save()
+            return JsonResponse({
+                'status': 'added',
+                'new_count': confession.upvote_count
+            })
 
     return HttpResponseBadRequest("Invalid request method.")
-     
+
 def browse_confessions(request):
     confessions = Confession.objects.all()
 
