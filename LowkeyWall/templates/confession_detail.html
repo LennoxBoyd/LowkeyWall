@@ -61,68 +61,70 @@
   </div>
 
   <!-- Comments & Replies -->
-  <h2 class="text-2xl font-bold mb-4">Responses</h2>
-  {% if comments %}
-    <div class="space-y-4 mb-6">
-      {% for comment in comments %}
-        <div class="bg-white/5 p-4 rounded-lg border border-white/10">
-          <p>
-            {{ comment.text }}
-            {% if comment.is_author %}
-              <span class="ml-2 inline-block px-2 py-1 text-xs font-bold bg-primary text-black rounded">Author</span>
-            {% endif %}
-          </p>
-          <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
+  <!-- Comments & Replies -->
+<h2 class="text-2xl font-bold mb-4">Responses</h2>
+{% if comments %}
+  <div class="space-y-4 mb-6">
+    {% for comment in comments %}
+      <div class="bg-white/5 p-4 rounded-lg border border-white/10">
+        <p>
+          {{ comment.text }}
+          {% if comment.is_author %}
+            <span class="ml-2 inline-block px-2 py-1 text-xs font-bold bg-primary text-black rounded">Author</span>
+          {% endif %}
+        </p>
+        <span class="text-sm text-white/40">{{ comment.created_at|timesince }} ago</span>
 
-          <!-- Reply to comment -->
-          <a href="#" class="reply-toggle text-primary hover:underline text-sm mt-2 inline-block">Reply</a>
-          <div class="reply-form-container hidden mt-2">
-            <form method="POST" class="reply-form"
-              data-reply-url="{% url 'post_reply_to_comment' confession.id comment.id %}">
-              {% csrf_token %}
-              <textarea name="message" rows="2" placeholder="Write your reply..."
-                class="w-full p-2 rounded bg-black/30 text-white"></textarea>
-              <button type="submit" class="mt-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
-                Post Reply
-              </button>
-            </form>
-          </div>
-
-          <!-- Replies to comment -->
-          {% for reply in replies %}
-            {% if reply.parent_comment and reply.parent_comment.id == comment.id %}
-              <div class="ml-6 mt-2 p-3 border-l-2 border-primary bg-white/10 rounded">
-                <p>{{ reply.message }}
-                  {% if reply.is_author %}
-                    <span class="ml-2 inline-block px-2 py-1 text-xs font-bold bg-primary text-black rounded">Author</span>
-                  {% endif %}
-                </p>
-                <span class="text-xs text-white/40">{{ reply.created_at|timesince }} ago</span>
-
-                <!-- Reply to reply -->
-                <a href="#" class="reply-toggle text-primary hover:underline text-xs inline-block mt-1">Reply</a>
-                <div class="reply-form-container hidden mt-2">
-                  <form method="POST" class="reply-form"
-                    data-reply-url="{% url 'post_reply_to_reply' confession.id reply.id %}">
-                    {% csrf_token %}
-                    <textarea name="message" rows="2" placeholder="Write your reply..."
-                      class="w-full p-2 rounded bg-black/30 text-white"></textarea>
-                    <button type="submit" class="mt-1 px-3 py-1 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90 text-xs">
-                      Post Reply
-                    </button>
-                  </form>
-                </div>
-
-              </div>
-            {% endif %}
-          {% endfor %}
-
+        <!-- Reply to comment -->
+        <a href="#" class="reply-toggle text-primary hover:underline text-sm mt-2 inline-block">Reply</a>
+        <div class="reply-form-container hidden mt-2">
+          <form method="POST" class="reply-form"
+            data-reply-url="{% url 'post_reply_to_comment' confession.id comment.id %}">
+            {% csrf_token %}
+            <textarea name="message" rows="2" placeholder="Write your reply..."
+              class="w-full p-2 rounded bg-black/30 text-white"></textarea>
+            <button type="submit" class="mt-2 px-4 py-2 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90">
+              Post Reply
+            </button>
+          </form>
         </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
-  {% endif %}
+
+        <!-- Replies to comment -->
+        {% for reply in replies %}
+          {% if reply.parent_comment and reply.parent_comment.id == comment.id %}
+            <div class="ml-6 mt-2 p-3 border-l-2 border-primary bg-white/10 rounded">
+              <p>{{ reply.message }}
+                {% if reply.is_author %}
+                  <span class="ml-2 inline-block px-2 py-1 text-xs font-bold bg-primary text-black rounded">Author</span>
+                {% endif %}
+              </p>
+              <span class="text-xs text-white/40">{{ reply.created_at|timesince }} ago</span>
+
+              <!-- Reply to reply -->
+              <a href="#" class="reply-toggle text-primary hover:underline text-xs inline-block mt-1">Reply</a>
+              <div class="reply-form-container hidden mt-2">
+                <form method="POST" class="reply-form"
+                  data-reply-url="{% url 'post_reply_to_reply' confession.id reply.id %}">
+                  {% csrf_token %}
+                  <textarea name="message" rows="2" placeholder="Write your reply..."
+                    class="w-full p-2 rounded bg-black/30 text-white"></textarea>
+                  <button type="submit" class="mt-1 px-3 py-1 bg-gradient-to-r from-primary to-secondary rounded-button text-white font-semibold hover:opacity-90 text-xs">
+                    Post Reply
+                  </button>
+                </form>
+              </div>
+
+            </div>
+          {% endif %}
+        {% endfor %}
+
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-white/40 italic mb-4">No responses yet. Be the first to respond.</p>
+{% endif %}
+
 
   <!-- Add new comment -->
   <h3 class="text-xl font-semibold mb-2">Add a Response</h3>
